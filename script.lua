@@ -1,1 +1,489 @@
-do local v0=Instance.new("ScreenGui");local v1=Instance.new("Frame");local v2=Instance.new("UICorner");local v3=Instance.new("TextLabel");local v4=Instance.new("ScrollingFrame");local v5=Instance.new("UIListLayout");local v6=Instance.new("TextButton");local v7=Instance.new("TextBox");local v8=Instance.new("TextButton");local v9=Instance.new("TextButton");local v10=Instance.new("TextButton");local v11=Instance.new("TextButton");local v12=Instance.new("TextButton");local v13=Instance.new("TextButton");local v14=Instance.new("TextButton");local v15=Instance.new("ImageButton");local v16=Instance.new("UICorner");v0.Parent=game:GetService("CoreGui");v0.ResetOnSpawn=false;v1.Parent=v0;v1.BackgroundColor3=Color3.fromRGB(1428 -(447 + 966) ,32 -20 ,22);v1.Position=UDim2.new(1817.1 -(1703 + 114) ,0,701.25 -(376 + 325) ,0 -0 );v1.Size=UDim2.new(0 -0 ,49 + 121 ,0 -0 ,314 -(9 + 5) );v1.Active=true;v1.Draggable=true;v2.Parent=v1;v2.CornerRadius=UDim.new(0,392 -(85 + 291) );v3.Parent=v1;v3.Size=UDim2.new(1266 -(243 + 1022) ,0,0 -0 ,35);v3.BackgroundTransparency=1 + 0 ;v3.Text="Raven Mod";v3.TextColor3=Color3.fromRGB(1360 -(1123 + 57) ,100,208 + 47 );v3.Font=Enum.Font.SourceSansBold;v3.TextSize=271 -(163 + 91) ;v14.Parent=v1;v14.Size=UDim2.new(0,1955 -(1869 + 61) ,0 + 0 ,87 -62 );v14.Position=UDim2.new(1 -0 , -30,0,1 + 4 );v14.BackgroundColor3=Color3.fromRGB(35,27 -7 ,47 + 3 );v14.Text="X";v14.TextColor3=Color3.fromRGB(220,150,1729 -(1329 + 145) );v14.Font=Enum.Font.SourceSansBold;v14.TextSize=985 -(140 + 831) ;local v43=Instance.new("UICorner");v43.CornerRadius=UDim.new(0,1856 -(1409 + 441) );v43.Parent=v14;v4.Parent=v1;v4.Size=UDim2.new(719 -(15 + 703) ,0 + 0 ,439 -(262 + 176) , -40);v4.Position=UDim2.new(1721 -(345 + 1376) ,688 -(198 + 490) ,0 -0 ,83 -48 );v4.BackgroundTransparency=1207 -(696 + 510) ;v4.BorderSizePixel=0 -0 ;v4.ScrollBarThickness=4;v4.ScrollBarImageColor3=Color3.fromRGB(120,1312 -(1091 + 171) ,180);v4.CanvasSize=UDim2.new(0 + 0 ,0 -0 ,0 -0 ,0);v4.AutomaticCanvasSize=Enum.AutomaticSize.Y;v5.Parent=v4;v5.Padding=UDim.new(374 -(123 + 251) ,39 -31 );v5.HorizontalAlignment=Enum.HorizontalAlignment.Center;local v60=Instance.new("Frame");v60.Parent=v4;v60.Size=UDim2.new(699 -(208 + 490) ,0 + 0 ,0 + 0 ,846 -(660 + 176) );v60.BackgroundTransparency=1 + 0 ;v15.Parent=v0;v15.Size=UDim2.new(202 -(14 + 188) ,50,0,725 -(534 + 141) );v15.Position=UDim2.new(0.02,0 + 0 ,0.25 + 0 ,0 + 0 );v15.BackgroundColor3=Color3.fromRGB(52 -27 ,15,35);v15.Image="rbxassetid://110303498557598";v15.Visible=false;v15.Active=true;v15.Draggable=true;v16.Parent=v15;v16.CornerRadius=UDim.new(1,0 -0 );local function v74(v105,v106,v107) local v108=0 -0 ;local v109;while true do if (v108==(1 + 0)) then v105.BackgroundColor3=v107;v105.Text=v106;v108=2 + 0 ;end if (v108==(398 -(115 + 281))) then v105.TextColor3=Color3.fromRGB(593 -338 ,212 + 43 ,616 -361 );v105.Font=Enum.Font.SourceSansSemibold;v108=10 -7 ;end if (v108==(867 -(550 + 317))) then v105.Parent=v4;v105.Size=UDim2.new(0.85,0 -0 ,0,52 -14 );v108=1;end if (v108==(11 -7)) then v109.CornerRadius=UDim.new(285 -(134 + 151) ,1675 -(970 + 695) );v109.Parent=v105;break;end if (v108==(5 -2)) then v105.TextSize=2004 -(582 + 1408) ;v109=Instance.new("UICorner");v108=13 -9 ;end end end v74(v6,"Aplicar Speed",Color3.fromRGB(113 -23 ,150 -110 ,1964 -(1195 + 629) ));v74(v8,"Set Waypoint 1",Color3.fromRGB(50,39 -9 ,331 -(187 + 54) ));v74(v9,"Teleport (TP 1)",Color3.fromRGB(900 -(162 + 618) ,32 + 13 ,120));v74(v10,"Set Waypoint 2",Color3.fromRGB(50,20 + 10 ,90));v74(v11,"Teleport (TP 2)",Color3.fromRGB(255 -135 ,75 -30 ,10 + 110 ));v74(v12,"Noclip: OFF",Color3.fromRGB(1706 -(1373 + 263) ,1020 -(451 + 549) ,16 + 34 ));v74(v13,"Discord (Copiar)",Color3.fromRGB(136 -48 ,169 -68 ,1626 -(746 + 638) ));v7.Parent=v4;v7.Size=UDim2.new(0.85 + 0 ,0,0 -0 ,35);v7.BackgroundColor3=Color3.fromRGB(30,361 -(218 + 123) ,1626 -(1535 + 46) );v7.Text="100";v7.PlaceholderText="Digite a Speed...";v7.TextColor3=Color3.fromRGB(219 + 1 ,27 + 153 ,815 -(306 + 254) );v7.Font=Enum.Font.SourceSansSemibold;v7.TextSize=1 + 13 ;local v84=Instance.new("UICorner");v84.CornerRadius=UDim.new(0,19 -9 );v84.Parent=v7;v5.SortOrder=Enum.SortOrder.LayoutOrder;v7.LayoutOrder=1468 -(899 + 568) ;v6.LayoutOrder=2 + 0 ;v8.LayoutOrder=3;v9.LayoutOrder=4;v10.LayoutOrder=5;v11.LayoutOrder=14 -8 ;v12.LayoutOrder=610 -(268 + 335) ;v13.LayoutOrder=8;v60.LayoutOrder=9;v14.MouseButton1Click:Connect(function() local v110=290 -(60 + 230) ;local v111;while true do if (v110==(572 -(426 + 146))) then v111=0 + 0 ;while true do if (v111==(1456 -(282 + 1174))) then v1.Visible=false;v15.Visible=true;break;end end break;end end end);v15.MouseButton1Click:Connect(function() local v112=811 -(569 + 242) ;while true do if (v112==(0 -0)) then v1.Visible=true;v15.Visible=false;break;end end end);local v98=game.Players.LocalPlayer;local v99=nil;local v100=nil;local v101=false;local v102=nil;local function v103() local v113=0 + 0 ;local v114;while true do if (v113==0) then local v192=1024 -(706 + 318) ;while true do if (v192==(1251 -(721 + 530))) then v114=v98.Character or v98.CharacterAdded:Wait() ;return v114:WaitForChild("HumanoidRootPart"),v114:WaitForChild("Humanoid"),v114;end end end end end v6.MouseButton1Click:Connect(function() local v115=1271 -(945 + 326) ;local v116;local v117;local v118;while true do if (v115==(0 -0)) then v116,v117=v103();v118=tonumber(v7.Text);v115=1 + 0 ;end if (v115==(701 -(271 + 429))) then if (v117 and v118) then v117.WalkSpeed=v118;end break;end end end);v8.MouseButton1Click:Connect(function() local v119,v120=v103();v99=v119.CFrame;end);v9.MouseButton1Click:Connect(function() local v122=0 + 0 ;local v123;local v124;while true do if (v122==(1500 -(1408 + 92))) then v123,v124=v103();if v99 then v123.CFrame=v99;end break;end end end);v10.MouseButton1Click:Connect(function() local v125=1086 -(461 + 625) ;local v126;local v127;local v128;while true do if (v125==(1288 -(993 + 295))) then v126=0 + 0 ;v127=nil;v125=1172 -(418 + 753) ;end if (v125==1) then v128=nil;while true do if (v126==(0 + 0)) then v127,v128=v103();v100=v127.CFrame;break;end end break;end end end);v11.MouseButton1Click:Connect(function() local v129=0 + 0 ;local v130;local v131;while true do if (v129==0) then v130,v131=v103();if v100 then v130.CFrame=v100;end break;end end end);v12.MouseButton1Click:Connect(function() local v132=0;local v133;local v134;local v135;while true do if (v132==(1 + 0)) then v135=nil;while true do if (v133==1) then if v101 then local v221=0;local v222;while true do if (v221==0) then v222=0;while true do if (v222==(1 + 0)) then v102=game:GetService("RunService").Stepped:Connect(function() if v135 then for v233,v234 in ipairs(v135:GetDescendants()) do if v234:IsA("BasePart") then v234.CanCollide=false;end end end end);break;end if (v222==(529 -(406 + 123))) then v12.BackgroundColor3=Color3.fromRGB(1899 -(1749 + 20) ,40,43 + 137 );v12.Text="Noclip: ON";v222=1323 -(1249 + 73) ;end end break;end end else v12.BackgroundColor3=Color3.fromRGB(25 + 45 ,20,1195 -(466 + 679) );v12.Text="Noclip: OFF";if v102 then local v229=0;while true do if (v229==0) then v102:Disconnect();v102=nil;break;end end end end break;end if (v133==0) then v134,v134,v135=v103();v101= not v101;v133=1;end end break;end if (v132==(0 -0)) then v133=0 -0 ;v134=nil;v132=1901 -(106 + 1794) ;end end end);local v104="https://discord.gg/9gucZSexX";v13.MouseButton1Click:Connect(function() if setclipboard then local v173=0 + 0 ;while true do if (v173==(0 + 0)) then setclipboard(v104);v13.Text="Copiado!";v173=2 -1 ;end if (v173==(2 -1)) then task.wait(116 -(4 + 110) );v13.Text="Discord (Copiar)";break;end end else local v174=584 -(57 + 527) ;while true do if (v174==(1427 -(41 + 1386))) then v13.Text="Erro ao copiar";task.wait(2);v174=104 -(17 + 86) ;end if (v174==1) then v13.Text="Discord (Copiar)";break;end end end end);local v0=Instance.new("ScreenGui");local v1=Instance.new("Frame");local v2=Instance.new("UICorner");local v3=Instance.new("TextLabel");local v4=Instance.new("ScrollingFrame");local v5=Instance.new("UIListLayout");local v6=Instance.new("TextButton");local v7=Instance.new("TextBox");local v8=Instance.new("TextButton");local v9=Instance.new("TextButton");local v10=Instance.new("TextButton");local v11=Instance.new("TextButton");local v12=Instance.new("TextButton");local v13=Instance.new("TextButton");local v14=Instance.new("TextButton");local v15=Instance.new("ImageButton");local v16=Instance.new("UICorner");v0.Parent=game:GetService("CoreGui");v0.ResetOnSpawn=false;v1.Parent=v0;v1.BackgroundColor3=Color3.fromRGB(15,12,22);v1.Position=UDim2.new(0.1,0 + 0 ,0.25 -0 ,0 -0 );v1.Size=UDim2.new(0,336 -(122 + 44) ,0 -0 ,995 -695 );v1.Active=true;v1.Draggable=true;v2.Parent=v1;v2.CornerRadius=UDim.new(0 + 0 ,3 + 13 );v3.Parent=v1;v3.Size=UDim2.new(1,0 -0 ,65 -(30 + 35) ,25 + 10 );v3.BackgroundTransparency=1258 -(1043 + 214) ;v3.Text="Raven Mod";v3.TextColor3=Color3.fromRGB(680 -500 ,1312 -(323 + 889) ,686 -431 );v3.Font=Enum.Font.SourceSansBold;v3.TextSize=597 -(361 + 219) ;v14.Parent=v1;v14.Size=UDim2.new(0,345 -(53 + 267) ,0,6 + 19 );v14.Position=UDim2.new(414 -(15 + 398) , -(1012 -(18 + 964)),0,18 -13 );v14.BackgroundColor3=Color3.fromRGB(21 + 14 ,13 + 7 ,900 -(20 + 830) );v14.Text="X";v14.TextColor3=Color3.fromRGB(172 + 48 ,276 -(116 + 10) ,19 + 236 );v14.Font=Enum.Font.SourceSansBold;v14.TextSize=752 -(542 + 196) ;local v43=Instance.new("UICorner");v43.CornerRadius=UDim.new(0 -0 ,6);v43.Parent=v14;v4.Parent=v1;v4.Size=UDim2.new(1 + 0 ,0 + 0 ,1 + 0 , -(105 -65));v4.Position=UDim2.new(0 -0 ,1551 -(1126 + 425) ,0,35);v4.BackgroundTransparency=406 -(118 + 287) ;v4.BorderSizePixel=0 -0 ;v4.ScrollBarThickness=1125 -(118 + 1003) ;v4.ScrollBarImageColor3=Color3.fromRGB(120,146 -96 ,557 -(142 + 235) );v4.CanvasSize=UDim2.new(0,0 -0 ,0 + 0 ,0);v4.AutomaticCanvasSize=Enum.AutomaticSize.Y;v5.Parent=v4;v5.Padding=UDim.new(977 -(553 + 424) ,14 -6 );v5.HorizontalAlignment=Enum.HorizontalAlignment.Center;local v60=Instance.new("Frame");v60.Parent=v4;v60.Size=UDim2.new(1 + 0 ,0,0,10 + 0 );v60.BackgroundTransparency=1 + 0 ;v15.Parent=v0;v15.Size=UDim2.new(0 + 0 ,50,0 + 0 ,108 -58 );v15.Position=UDim2.new(0.02,0 -0 ,0.25 -0 ,0 + 0 );v15.BackgroundColor3=Color3.fromRGB(25,15,35);v15.Image="rbxassetid://110303498557598";v15.Visible=false;v15.Active=true;v15.Draggable=true;v16.Parent=v15;v16.CornerRadius=UDim.new(4 -3 ,0);local function v74(v136,v137,v138) v136.Parent=v4;v136.Size=UDim2.new(753.85 -(239 + 514) ,0 + 0 ,1329 -(797 + 532) ,28 + 10 );v136.BackgroundColor3=v138;v136.Text=v137;v136.TextColor3=Color3.fromRGB(255,87 + 168 ,599 -344 );v136.Font=Enum.Font.SourceSansSemibold;v136.TextSize=14;local v147=Instance.new("UICorner");v147.CornerRadius=UDim.new(1202 -(373 + 829) ,10);v147.Parent=v136;end v74(v6,"Aplicar Speed",Color3.fromRGB(821 -(476 + 255) ,1170 -(369 + 761) ,81 + 59 ));v74(v8,"Set Waypoint 1",Color3.fromRGB(90 -40 ,56 -26 ,328 -(64 + 174) ));v74(v9,"Teleport (TP 1)",Color3.fromRGB(18 + 102 ,45,177 -57 ));v74(v10,"Set Waypoint 2",Color3.fromRGB(50,366 -(144 + 192) ,90));v74(v11,"Teleport (TP 2)",Color3.fromRGB(336 -(42 + 174) ,34 + 11 ,100 + 20 ));v74(v12,"Noclip: OFF",Color3.fromRGB(70,9 + 11 ,1554 -(363 + 1141) ));v74(v13,"Discord (Copiar)",Color3.fromRGB(1668 -(1183 + 397) ,101,736 -494 ));v7.Parent=v4;v7.Size=UDim2.new(0.85,0 + 0 ,0,27 + 8 );v7.BackgroundColor3=Color3.fromRGB(2005 -(1913 + 62) ,13 + 7 ,45);v7.Text="100";v7.PlaceholderText="Digite a Speed...";v7.TextColor3=Color3.fromRGB(582 -362 ,180,2188 -(565 + 1368) );v7.Font=Enum.Font.SourceSansSemibold;v7.TextSize=52 -38 ;local v84=Instance.new("UICorner");v84.CornerRadius=UDim.new(0,1671 -(1477 + 184) );v84.Parent=v7;v5.SortOrder=Enum.SortOrder.LayoutOrder;v7.LayoutOrder=1;v6.LayoutOrder=2;v8.LayoutOrder=3;v9.LayoutOrder=4;v10.LayoutOrder=5;v11.LayoutOrder=6;v12.LayoutOrder=7;v13.LayoutOrder=10 -2 ;v60.LayoutOrder=9 + 0 ;v14.MouseButton1Click:Connect(function() local v150=856 -(564 + 292) ;while true do if (0==v150) then v1.Visible=false;v15.Visible=true;break;end end end);v15.MouseButton1Click:Connect(function() local v151=0 -0 ;while true do if (v151==0) then v1.Visible=true;v15.Visible=false;break;end end end);local v98=game.Players.LocalPlayer;local v99=nil;local v100=nil;local v101=false;local v102=nil;local function v103() local v152=0 -0 ;local v153;while true do if (v152==0) then local v197=0;while true do if ((304 -(244 + 60))==v197) then v153=v98.Character or v98.CharacterAdded:Wait() ;return v153:WaitForChild("HumanoidRootPart"),v153:WaitForChild("Humanoid"),v153;end end end end end v6.MouseButton1Click:Connect(function() local v154=0 + 0 ;local v155;local v156;local v157;while true do if (v154==(477 -(41 + 435))) then if (v156 and v157) then v156.WalkSpeed=v157;end break;end if (v154==(1001 -(938 + 63))) then local v198=0 + 0 ;while true do if (v198==(1125 -(936 + 189))) then v155,v156=v103();v157=tonumber(v7.Text);v198=1;end if (v198==1) then v154=1 + 0 ;break;end end end end end);v8.MouseButton1Click:Connect(function() local v158=0;local v159;local v160;while true do if (v158==0) then v159,v160=v103();v99=v159.CFrame;break;end end end);v9.MouseButton1Click:Connect(function() local v161=1613 -(1565 + 48) ;local v162;local v163;while true do if (v161==(0 + 0)) then v162,v163=v103();if v99 then v162.CFrame=v99;end break;end end end);v10.MouseButton1Click:Connect(function() local v164=1138 -(782 + 356) ;local v165;local v166;local v167;while true do if (v164==1) then v167=nil;while true do if (v165==(267 -(176 + 91))) then v166,v167=v103();v100=v166.CFrame;break;end end break;end if (v164==0) then v165=0 -0 ;v166=nil;v164=1 -0 ;end end end);v11.MouseButton1Click:Connect(function() local v168=1092 -(975 + 117) ;local v169;local v170;while true do if (0==v168) then v169,v170=v103();if v100 then v169.CFrame=v100;end break;end end end);v12.MouseButton1Click:Connect(function() local v171,v171,v172=v103();v101= not v101;if v101 then local v175=1875 -(157 + 1718) ;while true do if (v175==(1 + 0)) then v102=game:GetService("RunService").Stepped:Connect(function() if v172 then for v227,v228 in ipairs(v172:GetDescendants()) do if v228:IsA("BasePart") then v228.CanCollide=false;end end end end);break;end if (v175==0) then v12.BackgroundColor3=Color3.fromRGB(461 -331 ,40,615 -435 );v12.Text="Noclip: ON";v175=1019 -(697 + 321) ;end end else local v176=0;while true do if (v176==0) then v12.BackgroundColor3=Color3.fromRGB(190 -120 ,42 -22 ,115 -65 );v12.Text="Noclip: OFF";v176=1 + 0 ;end if (v176==(1 -0)) then if v102 then local v220=0;while true do if (v220==(0 -0)) then v102:Disconnect();v102=nil;break;end end end break;end end end end);local v104="https://discord.gg/9gucZSexX";v13.MouseButton1Click:Connect(function() if setclipboard then local v177=0;local v178;while true do if (v177==0) then v178=1227 -(322 + 905) ;while true do if (v178==(611 -(602 + 9))) then setclipboard(v104);v13.Text="Copiado!";v178=1;end if (v178==(1190 -(449 + 740))) then task.wait(874 -(826 + 46) );v13.Text="Discord (Copiar)";break;end end break;end end else local v179=947 -(245 + 702) ;while true do if (v179==(0 -0)) then v13.Text="Erro ao copiar";task.wait(2);v179=1 + 0 ;end if ((1899 -(260 + 1638))==v179) then v13.Text="Discord (Copiar)";break;end end end end); end
+-- 1. CONFIGURAÇÃO DA INTERFACE PRINCIPAL
+local ScreenGui = Instance.new("ScreenGui")
+local FramePrincipal = Instance.new("Frame")
+local CantosMenu = Instance.new("UICorner") 
+local Titulo = Instance.new("TextLabel")
+
+-- Janela com Scroll
+local ContainerScroll = Instance.new("ScrollingFrame")
+local LayoutBotoes = Instance.new("UIListLayout")
+
+-- Botões e Campos de Função (Speed, Jump, Fly)
+local BotaoSpeed = Instance.new("TextButton")
+local CaixaSpeed = Instance.new("TextBox")
+
+local BotaoJump = Instance.new("TextButton")
+local CaixaJump = Instance.new("TextBox")
+
+local BotaoFly = Instance.new("TextButton")
+local CaixaFly = Instance.new("TextBox")
+
+-- Waypoints
+local BotaoSalvar1 = Instance.new("TextButton")
+local BotaoTP1 = Instance.new("TextButton")
+
+local BotaoSalvar2 = Instance.new("TextButton")
+local BotaoTP2 = Instance.new("TextButton")
+
+-- Botões de Alternância Únicos
+local BotaoNoclip = Instance.new("TextButton")
+local BotaoInfJump = Instance.new("TextButton")
+local BotaoFullbright = Instance.new("TextButton")
+local BotaoESP = Instance.new("TextButton")
+local BotaoWalkFling = Instance.new("TextButton")
+local BotaoTPTool = Instance.new("TextButton")
+
+-- Ações Rápidas
+local BotaoReset = Instance.new("TextButton")
+local BotaoDiscord = Instance.new("TextButton")
+
+-- Elementos de Abrir/Fechar
+local BotaoFechar = Instance.new("TextButton") 
+local BotaoAbrir = Instance.new("TextButton") 
+local CantosIcone = Instance.new("UICorner")
+
+-- Ativa a interface
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+-- --- ESTILO DO MENU PRINCIPAL ---
+FramePrincipal.Parent = ScreenGui
+FramePrincipal.BackgroundColor3 = Color3.fromRGB(15, 12, 22)
+FramePrincipal.Position = UDim2.new(0.1, 0, 0.2, 0)
+FramePrincipal.Size = UDim2.new(0, 220, 0, 300)
+FramePrincipal.Active = true
+FramePrincipal.Draggable = true 
+
+CantosMenu.Parent = FramePrincipal
+CantosMenu.CornerRadius = UDim.new(0, 16) 
+
+-- Título do Menu
+Titulo.Parent = FramePrincipal
+Titulo.Size = UDim2.new(1, 0, 0, 35)
+Titulo.BackgroundTransparency = 1
+Titulo.Text = "Raven Mod"
+Titulo.TextColor3 = Color3.fromRGB(180, 100, 255)
+Titulo.Font = Enum.Font.SourceSansBold
+Titulo.TextSize = 17
+
+-- Botão Fechar ("X")
+BotaoFechar.Parent = FramePrincipal
+BotaoFechar.Size = UDim2.new(0, 25, 0, 25)
+BotaoFechar.Position = UDim2.new(1, -30, 0, 5)
+BotaoFechar.BackgroundColor3 = Color3.fromRGB(35, 20, 50)
+BotaoFechar.Text = "X"
+BotaoFechar.TextColor3 = Color3.fromRGB(220, 150, 255)
+BotaoFechar.Font = Enum.Font.SourceSansBold
+BotaoFechar.TextSize = 14
+local CantosFechar = Instance.new("UICorner")
+CantosFechar.CornerRadius = UDim.new(0, 6)
+CantosFechar.Parent = BotaoFechar
+
+-- --- SCROLLING FRAME ---
+ContainerScroll.Parent = FramePrincipal
+ContainerScroll.Size = UDim2.new(1, 0, 1, -40)
+ContainerScroll.Position = UDim2.new(0, 0, 0, 35)
+ContainerScroll.BackgroundTransparency = 1
+ContainerScroll.BorderSizePixel = 0
+ContainerScroll.ScrollBarThickness = 4
+ContainerScroll.ScrollBarImageColor3 = Color3.fromRGB(120, 50, 180)
+ContainerScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+ContainerScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+
+LayoutBotoes.Parent = ContainerScroll
+LayoutBotoes.Padding = UDim.new(0, 8)
+LayoutBotoes.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local EspacoFim = Instance.new("Frame")
+EspacoFim.Parent = ContainerScroll
+EspacoFim.Size = UDim2.new(1, 0, 0, 10)
+EspacoFim.BackgroundTransparency = 1
+
+-- --- ÍCONE REDONDO DE ABRIR (60x60) ---
+BotaoAbrir.Parent = ScreenGui
+BotaoAbrir.Size = UDim2.new(0, 60, 0, 60)
+BotaoAbrir.Position = UDim2.new(0.02, 0, 0.25, 0) 
+BotaoAbrir.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
+BotaoAbrir.Text = "R"
+BotaoAbrir.TextColor3 = Color3.fromRGB(220, 150, 255)
+BotaoAbrir.Font = Enum.Font.SourceSansBold
+BotaoAbrir.TextSize = 24
+BotaoAbrir.Visible = false 
+BotaoAbrir.Active = true
+BotaoAbrir.Draggable = true 
+
+CantosIcone.Parent = BotaoAbrir
+CantosIcone.CornerRadius = UDim.new(1, 0)
+
+-- --- FUNÇÕES DE AUXÍLIO E ESTILO ---
+local function criarParLadoALado(elemEsq, elemDir, layoutOrder)
+    local ContainerGrupo = Instance.new("Frame")
+    ContainerGrupo.Parent = ContainerScroll
+    ContainerGrupo.Size = UDim2.new(0.9, 0, 0, 35)
+    ContainerGrupo.BackgroundTransparency = 1
+    ContainerGrupo.LayoutOrder = layoutOrder
+
+    elemEsq.Parent = ContainerGrupo
+    elemEsq.Size = UDim2.new(0.48, 0, 1, 0)
+    elemEsq.Position = UDim2.new(0, 0, 0, 0)
+
+    elemDir.Parent = ContainerGrupo
+    elemDir.Size = UDim2.new(0.48, 0, 1, 0)
+    elemDir.Position = UDim2.new(0.52, 0, 0, 0)
+end
+
+local function estilizarBotao(botao, texto, corFundo)
+    botao.BackgroundColor3 = corFundo
+    botao.Text = texto
+    botao.TextColor3 = Color3.fromRGB(255, 255, 255)
+    botao.Font = Enum.Font.SourceSansSemibold
+    botao.TextSize = 13
+    local cantos = Instance.new("UICorner")
+    cantos.CornerRadius = UDim.new(0, 8)
+    cantos.Parent = botao
+end
+
+local function estilizarCaixa(caixa, textoPadrao, placeholder)
+    caixa.BackgroundColor3 = Color3.fromRGB(30, 20, 45)
+    caixa.Text = textoPadrao
+    caixa.PlaceholderText = placeholder
+    caixa.TextColor3 = Color3.fromRGB(220, 180, 255)
+    caixa.Font = Enum.Font.SourceSansSemibold
+    caixa.TextSize = 13
+    local cantos = Instance.new("UICorner")
+    cantos.CornerRadius = UDim.new(0, 8)
+    cantos.Parent = caixa
+end
+
+local function estilizarBotaoLargo(botao, texto, corFundo, layoutOrder)
+    botao.Parent = ContainerScroll
+    botao.Size = UDim2.new(0.9, 0, 0, 35)
+    botao.LayoutOrder = layoutOrder
+    estilizarBotao(botao, texto, corFundo)
+end
+
+-- Estilização
+estilizarBotao(BotaoSpeed, "Aplicar Speed", Color3.fromRGB(90, 40, 140))
+estilizarCaixa(CaixaSpeed, "100", "Speed...")
+
+estilizarBotao(BotaoJump, "Aplicar Jump", Color3.fromRGB(90, 40, 140))
+estilizarCaixa(CaixaJump, "100", "Jump...")
+
+estilizarBotao(BotaoFly, "Fly: OFF", Color3.fromRGB(70, 20, 50))
+estilizarCaixa(CaixaFly, "50", "Fly Speed...")
+
+estilizarBotao(BotaoSalvar1, "Set WP 1", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoTP1, "TP 1", Color3.fromRGB(120, 45, 120))
+
+estilizarBotao(BotaoSalvar2, "Set WP 2", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoTP2, "TP 2", Color3.fromRGB(120, 45, 120))
+
+-- Montar Pares Lado a Lado
+criarParLadoALado(CaixaSpeed, BotaoSpeed, 1)
+criarParLadoALado(CaixaJump, BotaoJump, 2)
+criarParLadoALado(CaixaFly, BotaoFly, 3)
+criarParLadoALado(BotaoSalvar1, BotaoTP1, 4)
+criarParLadoALado(BotaoSalvar2, BotaoTP2, 5)
+
+-- Botões Largos
+estilizarBotaoLargo(BotaoTPTool, "Obter Teleport Tool", Color3.fromRGB(90, 40, 140), 6)
+estilizarBotaoLargo(BotaoNoclip, "Noclip: OFF", Color3.fromRGB(70, 20, 50), 7)
+estilizarBotaoLargo(BotaoInfJump, "Infinite Jump: OFF", Color3.fromRGB(70, 20, 50), 8)
+estilizarBotaoLargo(BotaoFullbright, "Fullbright: OFF", Color3.fromRGB(70, 20, 50), 9)
+estilizarBotaoLargo(BotaoESP, "ESP Players: OFF", Color3.fromRGB(70, 20, 50), 10)
+estilizarBotaoLargo(BotaoWalkFling, "Walk Fling: OFF", Color3.fromRGB(70, 20, 50), 11)
+estilizarBotaoLargo(BotaoReset, "Reset Character", Color3.fromRGB(120, 30, 30), 12)
+estilizarBotaoLargo(BotaoDiscord, "Discord (Copiar)", Color3.fromRGB(88, 101, 242), 13)
+
+EspacoFim.LayoutOrder = 14
+LayoutBotoes.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- 2. LÓGICA DE ABRIR E FECHAR
+BotaoFechar.MouseButton1Click:Connect(function()
+    FramePrincipal.Visible = false 
+    BotaoAbrir.Visible = true 
+end)
+
+BotaoAbrir.MouseButton1Click:Connect(function()
+    FramePrincipal.Visible = true 
+    BotaoAbrir.Visible = false 
+end)
+
+-- 3. CÓDIGO DAS FUNÇÕES DO JOGO
+local player = game.Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+
+local pontoSalvo1 = nil
+local pontoSalvo2 = nil
+
+local noclipAtivo = false
+local noclipConexao = nil
+
+local flyAtivo = false
+local bodyVelocity = nil
+local bodyGyro = nil
+local flyConexao = nil
+
+local infJumpAtivo = false
+local infJumpConexao = nil
+
+local fullbrightAtivo = false
+local iluminacaoOriginal = {
+    Brightness = Lighting.Brightness,
+    ClockTime = Lighting.ClockTime,
+    GlobalShadows = Lighting.GlobalShadows,
+    Ambient = Lighting.Ambient
+}
+
+local espAtivo = false
+local espConexao = nil
+
+local walkFlingAtivo = false
+local walkFlingConexao = nil
+
+local function obterComponentes()
+    local char = player.Character or player.CharacterAdded:Wait()
+    return char:WaitForChild("HumanoidRootPart"), char:WaitForChild("Humanoid"), char
+end
+
+-- Speed
+BotaoSpeed.MouseButton1Click:Connect(function()
+    local _, hum = obterComponentes()
+    local novaVelocidade = tonumber(CaixaSpeed.Text)
+    if hum and novaVelocidade then hum.WalkSpeed = novaVelocidade end
+end)
+
+-- JumpPower
+BotaoJump.MouseButton1Click:Connect(function()
+    local _, hum = obterComponentes()
+    local novoPulo = tonumber(CaixaJump.Text)
+    if hum and novoPulo then
+        hum.UseJumpPower = true
+        hum.JumpPower = novoPulo
+    end
+end)
+
+-- Fly
+BotaoFly.MouseButton1Click:Connect(function()
+    local root, hum, _ = obterComponentes()
+    flyAtivo = not flyAtivo
+
+    if flyAtivo then
+        BotaoFly.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoFly.Text = "Fly: ON"
+        hum.PlatformStand = true
+
+        bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        bodyVelocity.Velocity = Vector3.zero
+        bodyVelocity.Parent = root
+
+        bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
+        bodyGyro.P = 9e4
+        bodyGyro.CFrame = root.CFrame
+        bodyGyro.Parent = root
+
+        flyConexao = game:GetService("RunService").RenderStepped:Connect(function()
+            if flyAtivo and root and hum then
+                local camera = workspace.CurrentCamera
+                local velFly = tonumber(CaixaFly.Text) or 50
+                bodyGyro.CFrame = camera.CFrame
+                
+                if hum.MoveDirection.Magnitude > 0 then
+                    bodyVelocity.Velocity = camera.CFrame.LookVector * velFly
+                else
+                    bodyVelocity.Velocity = Vector3.zero
+                end
+            end
+        end)
+    else
+        BotaoFly.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoFly.Text = "Fly: OFF"
+        hum.PlatformStand = false
+        if bodyVelocity then bodyVelocity:Destroy() bodyVelocity = nil end
+        if bodyGyro then bodyGyro:Destroy() bodyGyro = nil end
+        if flyConexao then flyConexao:Disconnect() flyConexao = nil end
+    end
+end)
+
+-- Waypoints
+BotaoSalvar1.MouseButton1Click:Connect(function()
+    local root, _ = obterComponentes()
+    pontoSalvo1 = root.CFrame
+end)
+
+BotaoTP1.MouseButton1Click:Connect(function()
+    local root, _ = obterComponentes()
+    if pontoSalvo1 then root.CFrame = pontoSalvo1 end
+end)
+
+BotaoSalvar2.MouseButton1Click:Connect(function()
+    local root, _ = obterComponentes()
+    pontoSalvo2 = root.CFrame
+end)
+
+BotaoTP2.MouseButton1Click:Connect(function()
+    local root, _ = obterComponentes()
+    if pontoSalvo2 then root.CFrame = pontoSalvo2 end
+end)
+
+-- Teleport Tool
+BotaoTPTool.MouseButton1Click:Connect(function()
+    local tool = Instance.new("Tool")
+    tool.Name = "TP Tool"
+    tool.RequiresHandle = false
+    tool.Activated:Connect(function()
+        local mouse = player:GetMouse()
+        local root, _, _ = obterComponentes()
+        if mouse.Hit and root then
+            root.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+        end
+    end)
+    tool.Parent = player.Backpack
+end)
+
+-- Noclip
+BotaoNoclip.MouseButton1Click:Connect(function()
+    local _, _, char = obterComponentes()
+    noclipAtivo = not noclipAtivo
+
+    if noclipAtivo then
+        BotaoNoclip.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoNoclip.Text = "Noclip: ON"
+        noclipConexao = game:GetService("RunService").Stepped:Connect(function()
+            if char then
+                for _, parte in ipairs(char:GetDescendants()) do
+                    if parte:IsA("BasePart") then parte.CanCollide = false end
+                end
+            end
+        end)
+    else
+        BotaoNoclip.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoNoclip.Text = "Noclip: OFF"
+        if noclipConexao then noclipConexao:Disconnect() noclipConexao = nil end
+    end
+end)
+
+-- Infinite Jump
+BotaoInfJump.MouseButton1Click:Connect(function()
+    infJumpAtivo = not infJumpAtivo
+    if infJumpAtivo then
+        BotaoInfJump.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoInfJump.Text = "Infinite Jump: ON"
+        infJumpConexao = UserInputService.JumpRequest:Connect(function()
+            local _, hum = obterComponentes()
+            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
+        end)
+    else
+        BotaoInfJump.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoInfJump.Text = "Infinite Jump: OFF"
+        if infJumpConexao then infJumpConexao:Disconnect() infJumpConexao = nil end
+    end
+end)
+
+-- Fullbright
+BotaoFullbright.MouseButton1Click:Connect(function()
+    fullbrightAtivo = not fullbrightAtivo
+    if fullbrightAtivo then
+        BotaoFullbright.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoFullbright.Text = "Fullbright: ON"
+        Lighting.Brightness = 2
+        Lighting.ClockTime = 14
+        Lighting.GlobalShadows = false
+        Lighting.Ambient = Color3.fromRGB(255, 255, 255)
+    else
+        BotaoFullbright.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoFullbright.Text = "Fullbright: OFF"
+        Lighting.Brightness = iluminacaoOriginal.Brightness
+        Lighting.ClockTime = iluminacaoOriginal.ClockTime
+        Lighting.GlobalShadows = iluminacaoOriginal.GlobalShadows
+        Lighting.Ambient = iluminacaoOriginal.Ambient
+    end
+end)
+
+-- ESP Players (Highlight)
+local function aplicarHighlight(p)
+    if p ~= player and p.Character then
+        if not p.Character:FindFirstChild("RavenESP") then
+            local hl = Instance.new("Highlight")
+            hl.Name = "RavenESP"
+            hl.FillColor = Color3.fromRGB(180, 100, 255)
+            hl.OutlineColor = Color3.fromRGB(255, 255, 255)
+            hl.FillTransparency = 0.5
+            hl.Parent = p.Character
+        end
+    end
+end
+
+BotaoESP.MouseButton1Click:Connect(function()
+    espAtivo = not espAtivo
+    if espAtivo then
+        BotaoESP.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoESP.Text = "ESP Players: ON"
+        
+        for _, p in ipairs(game.Players:GetPlayers()) do aplicarHighlight(p) end
+        
+        espConexao = game.Players.PlayerAdded:Connect(function(p)
+            p.CharacterAdded:Connect(function()
+                task.wait(0.5)
+                if espAtivo then aplicarHighlight(p) end
+            end)
+        end)
+    else
+        BotaoESP.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoESP.Text = "ESP Players: OFF"
+        if espConexao then espConexao:Disconnect() espConexao = nil end
+        for _, p in ipairs(game.Players:GetPlayers()) do
+            if p.Character and p.Character:FindFirstChild("RavenESP") then
+                p.Character.RavenESP:Destroy()
+            end
+        end
+    end
+end)
+
+-- Walk Fling
+BotaoWalkFling.MouseButton1Click:Connect(function()
+    local root, _, _ = obterComponentes()
+    walkFlingAtivo = not walkFlingAtivo
+
+    if walkFlingAtivo then
+        BotaoWalkFling.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        BotaoWalkFling.Text = "Walk Fling: ON"
+        
+        walkFlingConexao = game:GetService("RunService").Heartbeat:Connect(function()
+            if walkFlingAtivo and root then
+                local velOriginal = root.AssemblyLinearVelocity
+                root.AssemblyLinearVelocity = Vector3.new(10000, 10000, 10000)
+                game:GetService("RunService").RenderStepped:Wait()
+                root.AssemblyLinearVelocity = velOriginal
+            end
+        end)
+    else
+        BotaoWalkFling.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        BotaoWalkFling.Text = "Walk Fling: OFF"
+        if walkFlingConexao then walkFlingConexao:Disconnect() walkFlingConexao = nil end
+    end
+end)
+
+-- Reset Character
+BotaoReset.MouseButton1Click:Connect(function()
+    local _, hum = obterComponentes()
+    if hum then hum.Health = 0 end
+end)
+
+-- Copiar Discord
+local linkDiscord = "https://discord.gg/9gucZSexX"
+BotaoDiscord.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(linkDiscord)
+        BotaoDiscord.Text = "Copiado!"
+        task.wait(2)
+        BotaoDiscord.Text = "Discord (Copiar)"
+    else
+        BotaoDiscord.Text = "Erro ao copiar"
+        task.wait(2)
+        BotaoDiscord.Text = "Discord (Copiar)"
+    end
+end)
