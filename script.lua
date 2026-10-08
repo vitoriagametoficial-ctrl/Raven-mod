@@ -21,8 +21,32 @@ if _G.RavenConnections then
 end
 _G.RavenConnections = {}
 
--- CONFIGURAÇÕES GLOBAIS DE TELEPORTE
+-- CONFIGURAÇÕES GLOBAIS DE TELEPORTE E ESTILO
 local ModoTP = "Instantâneo"
+local pontoSalvo1, pontoSalvo2 = nil, nil
+local externalTPAtivo = false
+
+-- TABELA DE TEMAS E CONFIGURAÇÕES DE TAMANHO
+local Temas = {
+    {Nome = "Roxo Padrão", Fundo = Color3.fromRGB(15, 12, 22), SubFundo = Color3.fromRGB(20, 15, 30), Texto = Color3.fromRGB(180, 100, 255)},
+    {Nome = "Azul Neon", Fundo = Color3.fromRGB(10, 15, 30), SubFundo = Color3.fromRGB(15, 22, 45), Texto = Color3.fromRGB(0, 210, 255)},
+    {Nome = "Vermelho Carmim", Fundo = Color3.fromRGB(25, 10, 15), SubFundo = Color3.fromRGB(35, 15, 20), Texto = Color3.fromRGB(255, 80, 100)},
+    {Nome = "Verde Hacker", Fundo = Color3.fromRGB(10, 20, 15), SubFundo = Color3.fromRGB(15, 30, 20), Texto = Color3.fromRGB(50, 255, 120)},
+    {Nome = "Dark Puro", Fundo = Color3.fromRGB(15, 15, 15), SubFundo = Color3.fromRGB(22, 22, 22), Texto = Color3.fromRGB(220, 220, 220)}
+}
+local temaAtualIndex = 1
+local niveisTransparencia = {0, 0.25, 0.50}
+local transpIndex = 1
+local tamanhosIcone = {UDim2.new(0, 38, 0, 38), UDim2.new(0, 50, 0, 50), UDim2.new(0, 62, 0, 62)}
+local tamanhoIconeIndex = 2
+
+-- TAMANHOS DO MENU PRINCIPAL (PEQUENO, MÉDIO, GRANDE)
+local tamanhosMenu = {
+    UDim2.new(0, 240, 0, 360), -- Pequeno
+    UDim2.new(0, 280, 0, 420), -- Médio (Padrão)
+    UDim2.new(0, 320, 0, 480)  -- Grande
+}
+local tamanhoMenuIndex = 2
 
 -- GUI PRINCIPAL
 local ScreenGui = Instance.new("ScreenGui")
@@ -31,12 +55,12 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.Parent = PlayerGui
 
--- JANELAS (LARGURA AUMENTADA)
+-- JANELA PRINCIPAL
 local FramePrincipal = Instance.new("Frame")
 FramePrincipal.Parent = ScreenGui
-FramePrincipal.BackgroundColor3 = Color3.fromRGB(15, 12, 22)
+FramePrincipal.BackgroundColor3 = Temas[1].Fundo
 FramePrincipal.Position = UDim2.new(0.05, 0, 0.18, 0)
-FramePrincipal.Size = UDim2.new(0, 280, 0, 420)
+FramePrincipal.Size = tamanhosMenu[tamanhoMenuIndex]
 FramePrincipal.Active = true
 FramePrincipal.Draggable = true 
 
@@ -49,7 +73,7 @@ Titulo.Parent = FramePrincipal
 Titulo.Size = UDim2.new(1, 0, 0, 35)
 Titulo.BackgroundTransparency = 1
 Titulo.Text = "👑 Raven Mod"
-Titulo.TextColor3 = Color3.fromRGB(180, 100, 255)
+Titulo.TextColor3 = Temas[1].Texto
 Titulo.Font = Enum.Font.SourceSansBold
 Titulo.TextSize = 18
 
@@ -62,14 +86,113 @@ BotaoFechar.Text = "❌"
 BotaoFechar.TextColor3 = Color3.fromRGB(220, 150, 255)
 BotaoFechar.Font = Enum.Font.SourceSansBold
 BotaoFechar.TextSize = 12
+
 local CantosFechar = Instance.new("UICorner")
 CantosFechar.CornerRadius = UDim.new(0, 6)
 CantosFechar.Parent = BotaoFechar
 
+-- SUBMENU CONFIGURAÇÕES
+local FrameConfig = Instance.new("Frame")
+FrameConfig.Parent = ScreenGui
+FrameConfig.BackgroundColor3 = Temas[1].SubFundo
+FrameConfig.Position = UDim2.new(0.32, 0, 0.20, 0)
+FrameConfig.Size = UDim2.new(0, 260, 0, 270)
+FrameConfig.Active = true
+FrameConfig.Draggable = true
+FrameConfig.Visible = false
+
+local CantosConfig = Instance.new("UICorner")
+CantosConfig.CornerRadius = UDim.new(0, 12)
+CantosConfig.Parent = FrameConfig
+
+local TituloConfig = Instance.new("TextLabel")
+TituloConfig.Parent = FrameConfig
+TituloConfig.Size = UDim2.new(1, 0, 0, 35)
+TituloConfig.BackgroundTransparency = 1
+TituloConfig.Text = "⚙️ Configurações"
+TituloConfig.TextColor3 = Temas[1].Texto
+TituloConfig.Font = Enum.Font.SourceSansBold
+TituloConfig.TextSize = 17
+
+local BotaoFecharConfig = Instance.new("TextButton")
+BotaoFecharConfig.Parent = FrameConfig
+BotaoFecharConfig.Size = UDim2.new(0, 25, 0, 25)
+BotaoFecharConfig.Position = UDim2.new(1, -30, 0, 5)
+BotaoFecharConfig.BackgroundColor3 = Color3.fromRGB(35, 20, 50)
+BotaoFecharConfig.Text = "❌"
+BotaoFecharConfig.TextColor3 = Color3.fromRGB(220, 150, 255)
+BotaoFecharConfig.Font = Enum.Font.SourceSansBold
+BotaoFecharConfig.TextSize = 12
+
+local CantosFecharConfig = Instance.new("UICorner")
+CantosFecharConfig.CornerRadius = UDim.new(0, 6)
+CantosFecharConfig.Parent = BotaoFecharConfig
+
+-- ELEMENTOS DE CONFIGURAÇÃO (BOTÕES)
+local BotaoToggleExternalTP = Instance.new("TextButton")
+BotaoToggleExternalTP.Parent = FrameConfig
+BotaoToggleExternalTP.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoToggleExternalTP.Position = UDim2.new(0.05, 0, 0.16, 0)
+
+local BotaoMudarTema = Instance.new("TextButton")
+BotaoMudarTema.Parent = FrameConfig
+BotaoMudarTema.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoMudarTema.Position = UDim2.new(0.05, 0, 0.32, 0)
+
+local BotaoTransparencia = Instance.new("TextButton")
+BotaoTransparencia.Parent = FrameConfig
+BotaoTransparencia.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoTransparencia.Position = UDim2.new(0.05, 0, 0.48, 0)
+
+local BotaoTamanhoIcone = Instance.new("TextButton")
+BotaoTamanhoIcone.Parent = FrameConfig
+BotaoTamanhoIcone.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoTamanhoIcone.Position = UDim2.new(0.05, 0, 0.64, 0)
+
+local BotaoTamanhoMenu = Instance.new("TextButton")
+BotaoTamanhoMenu.Parent = FrameConfig
+BotaoTamanhoMenu.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoTamanhoMenu.Position = UDim2.new(0.05, 0, 0.80, 0)
+
+-- PAINEL FLUTUANTE EXTERNO DE TELEPORTE
+local FrameExternalTP = Instance.new("Frame")
+FrameExternalTP.Name = "ExternalTPHub"
+FrameExternalTP.Parent = ScreenGui
+FrameExternalTP.BackgroundColor3 = Temas[1].SubFundo
+FrameExternalTP.Position = UDim2.new(0.82, 0, 0.35, 0)
+FrameExternalTP.Size = UDim2.new(0, 140, 0, 95)
+FrameExternalTP.Active = true
+FrameExternalTP.Draggable = true
+FrameExternalTP.Visible = false
+
+local CantosExternal = Instance.new("UICorner")
+CantosExternal.CornerRadius = UDim.new(0, 10)
+CantosExternal.Parent = FrameExternalTP
+
+local ExtP1 = Instance.new("TextButton")
+ExtP1.Parent = FrameExternalTP
+ExtP1.Size = UDim2.new(0, 60, 0, 38)
+ExtP1.Position = UDim2.new(0, 7, 0, 8)
+
+local ExtTP1 = Instance.new("TextButton")
+ExtTP1.Parent = FrameExternalTP
+ExtTP1.Size = UDim2.new(0, 60, 0, 38)
+ExtTP1.Position = UDim2.new(0, 73, 0, 8)
+
+local ExtP2 = Instance.new("TextButton")
+ExtP2.Parent = FrameExternalTP
+ExtP2.Size = UDim2.new(0, 60, 0, 38)
+ExtP2.Position = UDim2.new(0, 7, 0, 50)
+
+local ExtTP2 = Instance.new("TextButton")
+ExtTP2.Parent = FrameExternalTP
+ExtTP2.Size = UDim2.new(0, 60, 0, 38)
+ExtTP2.Position = UDim2.new(0, 73, 0, 50)
+
 -- SUBMENU TP PLAYERS
 local FrameTPPlayers = Instance.new("Frame")
 FrameTPPlayers.Parent = ScreenGui
-FrameTPPlayers.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
+FrameTPPlayers.BackgroundColor3 = Temas[1].SubFundo
 FrameTPPlayers.Position = UDim2.new(0.32, 0, 0.18, 0)
 FrameTPPlayers.Size = UDim2.new(0, 280, 0, 420)
 FrameTPPlayers.Active = true
@@ -85,7 +208,7 @@ TituloTP.Parent = FrameTPPlayers
 TituloTP.Size = UDim2.new(1, 0, 0, 35)
 TituloTP.BackgroundTransparency = 1
 TituloTP.Text = "🎯 Target Teleport Hub"
-TituloTP.TextColor3 = Color3.fromRGB(180, 100, 255)
+TituloTP.TextColor3 = Temas[1].Texto
 TituloTP.Font = Enum.Font.SourceSansBold
 TituloTP.TextSize = 17
 
@@ -132,11 +255,15 @@ ContainerListaPlayers.BackgroundTransparency = 1
 ContainerListaPlayers.BorderSizePixel = 0
 ContainerListaPlayers.ScrollBarThickness = 4
 ContainerListaPlayers.ScrollBarImageColor3 = Color3.fromRGB(120, 50, 180)
-ContainerListaPlayers.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ContainerListaPlayers.CanvasSize = UDim2.new(0, 0, 0, 0)
 
 LayoutListaPlayers.Parent = ContainerListaPlayers
 LayoutListaPlayers.Padding = UDim.new(0, 3)
 LayoutListaPlayers.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+LayoutListaPlayers:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ContainerListaPlayers.CanvasSize = UDim2.new(0, 0, 0, LayoutListaPlayers.AbsoluteContentSize.Y + 10)
+end)
 
 -- SCROLLING FRAME PRINCIPAL
 local ContainerScroll = Instance.new("ScrollingFrame")
@@ -147,22 +274,21 @@ ContainerScroll.BackgroundTransparency = 1
 ContainerScroll.BorderSizePixel = 0
 ContainerScroll.ScrollBarThickness = 4
 ContainerScroll.ScrollBarImageColor3 = Color3.fromRGB(120, 50, 180)
-ContainerScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+ContainerScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 
 local LayoutBotoes = Instance.new("UIListLayout")
 LayoutBotoes.Parent = ContainerScroll
 LayoutBotoes.Padding = UDim.new(0, 8)
 LayoutBotoes.HorizontalAlignment = Enum.HorizontalAlignment.Center
 
-local EspacoFim = Instance.new("Frame")
-EspacoFim.Parent = ContainerScroll
-EspacoFim.Size = UDim2.new(1, 0, 0, 10)
-EspacoFim.BackgroundTransparency = 1
+LayoutBotoes:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    ContainerScroll.CanvasSize = UDim2.new(0, 0, 0, LayoutBotoes.AbsoluteContentSize.Y + 45)
+end)
 
--- ÍCONE FLUTUANTE
+-- ÍCONE FLUTUANTE ABRIR MENU
 local BotaoAbrir = Instance.new("TextButton")
 BotaoAbrir.Parent = ScreenGui
-BotaoAbrir.Size = UDim2.new(0, 50, 0, 50)
+BotaoAbrir.Size = tamanhosIcone[2]
 BotaoAbrir.Position = UDim2.new(0.02, 0, 0.2, 0) 
 BotaoAbrir.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
 BotaoAbrir.Text = "🔮"
@@ -177,7 +303,7 @@ local CantosIcone = Instance.new("UICorner")
 CantosIcone.CornerRadius = UDim.new(1, 0)
 CantosIcone.Parent = BotaoAbrir
 
--- DECLARAÇÃO DOS BOTÕES
+-- DECLARAÇÃO DOS BOTÕES DO MENU PRINCIPAL
 local BotaoSpeed = Instance.new("TextButton")
 local CaixaSpeed = Instance.new("TextBox")
 
@@ -251,7 +377,7 @@ local function estilizarBotaoLargo(botao, texto, corFundo, layoutOrder)
     estilizarBotao(botao, texto, corFundo)
 end
 
--- ORGANIZAÇÃO VISUAL (EMOJIS ADICIONADOS CONFORME REGRAS)
+-- ORGANIZAÇÃO VISUAL LADO A LADO
 estilizarBotao(BotaoSpeed, "Aplicar Speed", Color3.fromRGB(90, 40, 140))
 estilizarCaixa(CaixaSpeed, "100", "Speed...")
 criarParLadoALado(CaixaSpeed, BotaoSpeed, 1)
@@ -285,8 +411,34 @@ estilizarBotaoLargo(BotaoServerPoucaGente, "🌐 Server Hop (Low Players)", Colo
 estilizarBotaoLargo(BotaoReset, "💀 Respawn Character", Color3.fromRGB(120, 30, 30), 12)
 estilizarBotaoLargo(BotaoDiscord, "💬 Join Discord", Color3.fromRGB(88, 101, 242), 13)
 
-EspacoFim.LayoutOrder = 14
+estilizarBotao(ExtP1, "📍 P1", Color3.fromRGB(50, 30, 90))
+estilizarBotao(ExtTP1, "🚀 TP1", Color3.fromRGB(120, 45, 120))
+estilizarBotao(ExtP2, "📍 P2", Color3.fromRGB(50, 30, 90))
+estilizarBotao(ExtTP2, "🚀 TP2", Color3.fromRGB(120, 45, 120))
+
+estilizarBotao(BotaoToggleExternalTP, "📌 Botões TP na Tela: OFF", Color3.fromRGB(70, 20, 50))
+estilizarBotao(BotaoMudarTema, "🎨 Tema: Roxo Padrão", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoTransparencia, "👁️ Transparência: Opaco (0%)", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoTamanhoIcone, "🔮 Ícone Flutuante: Médio", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoTamanhoMenu, "📐 Tamanho do Menu: Médio", Color3.fromRGB(50, 30, 90))
+
 LayoutBotoes.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- BOTÃO DE CONFIGURAÇÕES CRIADO POR ÚLTIMO COM ZINDEX ALTO PARA GARANTIR ACESSO
+local BotaoConfig = Instance.new("TextButton")
+BotaoConfig.Parent = FramePrincipal
+BotaoConfig.Size = UDim2.new(0, 32, 0, 32)
+BotaoConfig.Position = UDim2.new(1, -38, 1, -38)
+BotaoConfig.BackgroundColor3 = Color3.fromRGB(35, 20, 50)
+BotaoConfig.Text = "⚙️"
+BotaoConfig.TextColor3 = Color3.fromRGB(220, 150, 255)
+BotaoConfig.Font = Enum.Font.SourceSansBold
+BotaoConfig.TextSize = 16
+BotaoConfig.ZIndex = 50
+
+local CantosConfigBtn = Instance.new("UICorner")
+CantosConfigBtn.CornerRadius = UDim.new(0, 8)
+CantosConfigBtn.Parent = BotaoConfig
 
 -- ESTILOS SUBMENU TP PLAYERS
 estilizarCaixa(CaixaNomePlayer, "", "Player Nickname...")
@@ -298,12 +450,21 @@ estilizarBotao(BotaoAtualizarLista, "🔄 Refresh Players", Color3.fromRGB(50, 3
 BotaoFechar.MouseButton1Click:Connect(function()
     FramePrincipal.Visible = false 
     FrameTPPlayers.Visible = false
+    FrameConfig.Visible = false
     BotaoAbrir.Visible = true 
 end)
 
 BotaoAbrir.MouseButton1Click:Connect(function()
     FramePrincipal.Visible = true 
     BotaoAbrir.Visible = false 
+end)
+
+BotaoConfig.MouseButton1Click:Connect(function()
+    FrameConfig.Visible = not FrameConfig.Visible
+end)
+
+BotaoFecharConfig.MouseButton1Click:Connect(function()
+    FrameConfig.Visible = false
 end)
 
 BotaoAbrirMenuTP.MouseButton1Click:Connect(function()
@@ -314,274 +475,50 @@ BotaoFecharTP.MouseButton1Click:Connect(function()
     FrameTPPlayers.Visible = false
 end)
 
--- SISTEMA DE AÇÕES E LOGICAS
-local pontoSalvo1, pontoSalvo2 = nil, nil
-local espAtivo, noclipAtivo, flyAtivo, infJumpAtivo, loopTPAtivo = false, false, false, false, false
-local bodyVelocity, bodyGyro = nil, nil
-
-local function obterComponentes()
-    local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    return char:FindFirstChild("HumanoidRootPart"), char:FindFirstChild("Humanoid"), char
-end
-
-local function executarTeleporte(cframeAlvo)
-    local root = obterComponentes()
-    if not root or not cframeAlvo then return end
-
-    if ModoTP == "Instantâneo" then
-        root.CFrame = cframeAlvo
-    elseif ModoTP == "Tween" then
-        local velTween = tonumber(CaixaTweenSpeed.Text) or 150
-        local distancia = (root.Position - cframeAlvo.Position).Magnitude
-        local tempo = distancia / velTween
-        local tweenInfo = TweenInfo.new(tempo, Enum.EasingStyle.Linear)
-        local tween = TweenService:Create(root, tweenInfo, {CFrame = cframeAlvo})
-        tween:Play()
-    end
-end
-
-BotaoModoTP.MouseButton1Click:Connect(function()
-    if ModoTP == "Instantâneo" then
-        ModoTP = "Tween"
-        BotaoModoTP.Text = "TP: Tween"
-        BotaoModoTP.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
-    else
-        ModoTP = "Instantâneo"
-        BotaoModoTP.Text = "TP: Instantâneo"
-        BotaoModoTP.BackgroundColor3 = Color3.fromRGB(50, 30, 90)
-    end
-end)
-
-local function buscarPlayerAlvo(texto)
-    local textoDigitado = string.lower(texto)
-    if textoDigitado == "" then return nil end
-    for _, p in ipairs(Players:GetPlayers()) do
-        if p ~= LocalPlayer then
-            if string.find(string.lower(p.Name), textoDigitado) or string.find(string.lower(p.DisplayName), textoDigitado) then
-                return p
-            end
-        end
-    end
-    return nil
-end
-
-local function atualizarListaMenuTP()
-    for _, item in ipairs(ContainerListaPlayers:GetChildren()) do
-        if item:IsA("TextLabel") or item:IsA("TextButton") then item:Destroy() end
-    end
-    local times = TeamsService:GetTeams()
-    local function criarBotaoPlayer(p)
-        local BotaoPlayer = Instance.new("TextButton")
-        BotaoPlayer.Parent = ContainerListaPlayers
-        BotaoPlayer.Size = UDim2.new(1, 0, 0, 24)
-        BotaoPlayer.BackgroundColor3 = Color3.fromRGB(30, 20, 45)
-        BotaoPlayer.Text = "  👤 " .. p.DisplayName .. " (@" .. p.Name .. ")"
-        BotaoPlayer.TextColor3 = Color3.fromRGB(220, 220, 220)
-        BotaoPlayer.Font = Enum.Font.SourceSans
-        BotaoPlayer.TextSize = 13
-        BotaoPlayer.TextXAlignment = Enum.TextXAlignment.Left
-
-        local cantos = Instance.new("UICorner")
-        cantos.CornerRadius = UDim.new(0, 4)
-        cantos.Parent = BotaoPlayer
-        BotaoPlayer.MouseButton1Click:Connect(function() CaixaNomePlayer.Text = p.Name end)
-    end
-
-    if #times > 0 then
-        for _, time in ipairs(times) do
-            local LabelTime = Instance.new("TextLabel")
-            LabelTime.Parent = ContainerListaPlayers
-            LabelTime.Size = UDim2.new(1, 0, 0, 20)
-            LabelTime.BackgroundTransparency = 1
-            LabelTime.Text = "--- " .. time.Name .. " ---"
-            LabelTime.TextColor3 = time.TeamColor.Color
-            LabelTime.Font = Enum.Font.SourceSansBold
-            LabelTime.TextSize = 13
-            for _, p in ipairs(time:GetPlayers()) do if p ~= LocalPlayer then criarBotaoPlayer(p) end end
-        end
-    else
-        for _, p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then criarBotaoPlayer(p) end end
-    end
-end
-BotaoAtualizarLista.MouseButton1Click:Connect(atualizarListaMenuTP)
-
--- MOVEMENT HANDLERS
-BotaoSpeed.MouseButton1Click:Connect(function()
-    local _, hum = obterComponentes()
-    local val = tonumber(CaixaSpeed.Text)
-    if hum and val then hum.WalkSpeed = val end
-end)
-
-BotaoJump.MouseButton1Click:Connect(function()
-    local _, hum = obterComponentes()
-    local val = tonumber(CaixaJump.Text)
-    if hum and val then hum.UseJumpPower = true hum.JumpPower = val end
-end)
-
-BotaoInfJump.MouseButton1Click:Connect(function()
-    infJumpAtivo = not infJumpAtivo
-    BotaoInfJump.Text = infJumpAtivo and "🦘 Infinite Jump: ON" or "🦘 Infinite Jump: OFF"
-    BotaoInfJump.BackgroundColor3 = infJumpAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
-    if infJumpAtivo then
-        _G.RavenConnections["InfJump"] = UserInputService.JumpRequest:Connect(function()
-            local _, hum = obterComponentes()
-            if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
-        end)
-    else
-        if _G.RavenConnections["InfJump"] then _G.RavenConnections["InfJump"]:Disconnect() end
-    end
-end)
-
-BotaoNoclip.MouseButton1Click:Connect(function()
-    noclipAtivo = not noclipAtivo
-    BotaoNoclip.Text = noclipAtivo and "Noclip: ON" or "Noclip: OFF"
-    BotaoNoclip.BackgroundColor3 = noclipAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
-    if noclipAtivo then
-        _G.RavenConnections["Noclip"] = RunService.Stepped:Connect(function()
-            local _, _, char = obterComponentes()
-            if char then for _, p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide = false end end end
-        end)
-    else
-        if _G.RavenConnections["Noclip"] then _G.RavenConnections["Noclip"]:Disconnect() end
-    end
-end)
-
-BotaoFly.MouseButton1Click:Connect(function()
-    local root, hum = obterComponentes()
-    flyAtivo = not flyAtivo
-    BotaoFly.Text = flyAtivo and "Fly: ON" or "Fly: OFF"
-    BotaoFly.BackgroundColor3 = flyAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
-
-    if flyAtivo then
-        hum.PlatformStand = true
-        bodyVelocity = Instance.new("BodyVelocity", root)
-        bodyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
-        bodyGyro = Instance.new("BodyGyro", root)
-        bodyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
-        bodyGyro.P = 9e4
-        
-        _G.RavenConnections["Fly"] = RunService.RenderStepped:Connect(function()
-            if flyAtivo and root and hum then
-                local vel = tonumber(CaixaFly.Text) or 50
-                bodyGyro.CFrame = Camera.CFrame
-                bodyVelocity.Velocity = (hum.MoveDirection.Magnitude > 0) and (Camera.CFrame.LookVector * vel) or Vector3.zero
-            end
-        end)
-    else
-        hum.PlatformStand = false
-        if bodyVelocity then bodyVelocity:Destroy() end
-        if bodyGyro then bodyGyro:Destroy() end
-        if _G.RavenConnections["Fly"] then _G.RavenConnections["Fly"]:Disconnect() end
-    end
-end)
-
--- VISUALS (ESP)
-local function aplicarESP(p)
-    if p == LocalPlayer then return end
-    local function addHL(char)
-        if not char then return end
-        local hl = char:FindFirstChild("SpyHighlight") or Instance.new("Highlight")
-        hl.Name = "SpyHighlight"
-        hl.Adornee = char
-        hl.FillTransparency = 0.5
-        hl.FillColor = Color3.fromRGB(255, 0, 0)
-        hl.Parent = char
-    end
-    if p.Character then addHL(p.Character) end
-    p.CharacterAdded:Connect(function(char) if espAtivo then task.wait(0.5) addHL(char) end end)
-end
-
-BotaoESP.MouseButton1Click:Connect(function()
-    espAtivo = not espAtivo
-    BotaoESP.Text = espAtivo and "👁️ ESP Players: ON" or "👁️ ESP Players: OFF"
-    BotaoESP.BackgroundColor3 = espAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
-    if espAtivo then
-        for _, p in ipairs(Players:GetPlayers()) do aplicarESP(p) end
-    else
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p.Character and p.Character:FindFirstChild("SpyHighlight") then p.Character.SpyHighlight:Destroy() end
-        end
-    end
-end)
-
--- WAYPOINTS E TELEPORTE
-BotaoSalvar1.MouseButton1Click:Connect(function() pontoSalvo1 = obterComponentes().CFrame end)
-BotaoTP1.MouseButton1Click:Connect(function() if pontoSalvo1 then executarTeleporte(pontoSalvo1) end end)
-BotaoSalvar2.MouseButton1Click:Connect(function() pontoSalvo2 = obterComponentes().CFrame end)
-BotaoTP2.MouseButton1Click:Connect(function() if pontoSalvo2 then executarTeleporte(pontoSalvo2) end end)
-
-BotaoIrParaPlayer.MouseButton1Click:Connect(function()
-    local alvo = buscarPlayerAlvo(CaixaNomePlayer.Text)
-    if alvo and alvo.Character and alvo.Character:FindFirstChild("HumanoidRootPart") then
-        executarTeleporte(alvo.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 3))
-    end
-end)
-
-BotaoLoopTP.MouseButton1Click:Connect(function()
-    loopTPAtivo = not loopTPAtivo
-    BotaoLoopTP.Text = loopTPAtivo and "🔄 Loop TP: ON" or "🔄 Loop TP: OFF"
-    BotaoLoopTP.BackgroundColor3 = loopTPAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
-    if loopTPAtivo then
-        _G.RavenConnections["LoopTP"] = RunService.Heartbeat:Connect(function()
-            local alvo = buscarPlayerAlvo(CaixaNomePlayer.Text)
-            if alvo and alvo.Character and alvo.Character:FindFirstChild("HumanoidRootPart") then
-                executarTeleporte(alvo.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0, 2))
-            end
-        end)
-    else
-        if _G.RavenConnections["LoopTP"] then _G.RavenConnections["LoopTP"]:Disconnect() end
-    end
-end)
-
--- UTILITIES (SERVER HOP, RESET, DISCORD)
-BotaoServerPoucaGente.MouseButton1Click:Connect(function()
-    BotaoServerPoucaGente.Text = "🌐 Searching Server..."
-    local placeId = game.PlaceId
-    local url = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/0?sortOrder=Asc&limit=100"
+-- LOGICA DAS CONFIGURAÇÕES DE PERSONALIZAÇÃO
+BotaoMudarTema.MouseButton1Click:Connect(function()
+    temaAtualIndex = (temaAtualIndex % #Temas) + 1
+    local tema = Temas[temaAtualIndex]
     
-    local sucesso, resultado = pcall(function()
-        return HttpService:JSONDecode(game:HttpGet(url))
-    end)
-    
-    if sucesso and resultado and resultado.data then
-        local serverEncontrado = nil
-        for _, server in ipairs(resultado.data) do
-            if server.playing and server.playing > 0 and server.id ~= game.JobId then
-                serverEncontrado = server.id
-                break
-            end
-        end
-        
-        if serverEncontrado then
-            BotaoServerPoucaGente.Text = "🌐 Connecting..."
-            TeleportService:TeleportToPlaceInstance(placeId, serverEncontrado, LocalPlayer)
-        else
-            BotaoServerPoucaGente.Text = "⚠️ No Server Found!"
-            task.wait(2)
-            BotaoServerPoucaGente.Text = "🌐 Server Hop (Low Players)"
-        end
-    else
-        BotaoServerPoucaGente.Text = "⚠️ Error Fetching!"
-        task.wait(2)
-        BotaoServerPoucaGente.Text = "🌐 Server Hop (Low Players)"
-    end
+    FramePrincipal.BackgroundColor3 = tema.Fundo
+    FrameConfig.BackgroundColor3 = tema.SubFundo
+    FrameTPPlayers.BackgroundColor3 = tema.SubFundo
+    FrameExternalTP.BackgroundColor3 = tema.SubFundo
+
+    Titulo.TextColor3 = tema.Texto
+    TituloConfig.TextColor3 = tema.Texto
+    TituloTP.TextColor3 = tema.Texto
+
+    BotaoMudarTema.Text = "🎨 Tema: " .. tema.Nome
 end)
 
-BotaoReset.MouseButton1Click:Connect(function()
-    local _, hum = obterComponentes()
-    if hum then hum.Health = 0 end
+BotaoTransparencia.MouseButton1Click:Connect(function()
+    transpIndex = (transpIndex % #niveisTransparencia) + 1
+    local val = niveisTransparencia[transpIndex]
+
+    FramePrincipal.BackgroundTransparency = val
+    FrameConfig.BackgroundTransparency = val
+    FrameTPPlayers.BackgroundTransparency = val
+    FrameExternalTP.BackgroundTransparency = val
+
+    BotaoTransparencia.Text = "👁️ Transparência: " .. (val == 0 and "Opaco (0%)" or math.floor(val * 100) .. "%")
 end)
 
-local linkDiscord = "https://discord.gg/9gucZSexX"
-BotaoDiscord.MouseButton1Click:Connect(function()
-    pcall(function()
-        if setclipboard then
-            setclipboard(linkDiscord)
-            BotaoDiscord.Text = "📋 Link Copied!"
-            task.wait(2)
-            BotaoDiscord.Text = "💬 Join Discord"
-        end
-    end)
+BotaoTamanhoIcone.MouseButton1Click:Connect(function()
+    tamanhoIconeIndex = (tamanhoIconeIndex % #tamanhosIcone) + 1
+    BotaoAbrir.Size = tamanhosIcone[tamanhoIconeIndex]
+
+    local rotulos = {"Pequeno", "Médio", "Grande"}
+    BotaoTamanhoIcone.Text = "🔮 Ícone Flutuante: " .. rotulos[tamanhoIconeIndex]
 end)
 
-atualizarListaMenuTP()
+BotaoTamanhoMenu.MouseButton1Click:Connect(function()
+    tamanhoMenuIndex = (tamanhoMenuIndex % #tamanhosMenu) + 1
+    FramePrincipal.Size = tamanhosMenu[tamanhoMenuIndex]
+
+    local rotulosMenu = {"Pequeno", "Médio", "Grande"}
+    BotaoTamanhoMenu.Text = "📐 Tamanho do Menu: " .. rotulosMenu[tamanhoMenuIndex]
+end)
+
+-- SISTEMA DE AÇÕES E LÓGICAS
+local espAtivo, noclipAtivo, flyAtivo,
