@@ -25,11 +25,12 @@ if _G.RavenConnections then
 end
 _G.RavenConnections = {}
 
--- CONFIGURAÇÕES GLOBAIS DE TELEPORTE E ESTILO
+-- CONFIGURAÇÕES GLOBAIS DE TELEPORTE, ESTILO E AUTO-INTERACT
 local ModoTP = "Instantâneo"
 local pontoSalvo1, pontoSalvo2, pontoSalvo3, pontoSalvo4 = nil, nil, nil, nil
 local quantidadeExternalTP = 0
 local autoTPPosAtivo = false
+local autoInteractAtivo = false
 local ARQUIVO_SAVE_ALL = "RavenMod_AllWP.json"
 
 -- TABELA DE ESTILOS E TAMANHOS
@@ -45,82 +46,6 @@ ScreenGui.Name = "RavenModFull"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = true
 ScreenGui.Parent = PlayerGui
-
--- SISTEMA DE POP-UP ESTILO "MANDALA" (CANTINHO DA TELA)
-local function mostrarPopupPerfil()
-    task.spawn(function()
-        pcall(function()
-            local PopupGui = Instance.new("ScreenGui")
-            PopupGui.Name = "RavenPopupNotif"
-            PopupGui.ResetOnSpawn = false
-            PopupGui.IgnoreGuiInset = true
-            PopupGui.Parent = PlayerGui
-
-            local Card = Instance.new("Frame")
-            Card.Parent = PopupGui
-            Card.BackgroundColor3 = Color3.fromRGB(20, 15, 30)
-            Card.Position = UDim2.new(1, 20, 0.82, 0) -- Começa fora da tela (à direita)
-            Card.Size = UDim2.new(0, 240, 0, 75)
-            Card.BorderSizePixel = 0
-
-            local CantosCard = Instance.new("UICorner")
-            CantosCard.CornerRadius = UDim.new(0, 10)
-            CantosCard.Parent = Card
-
-            local BordaCard = Instance.new("UIStroke")
-            BordaCard.Color = Color3.fromRGB(130, 40, 180)
-            BordaCard.Thickness = 1.5
-            BordaCard.Parent = Card
-
-            -- Avatar do seu perfil (ID: 4437277181)
-            local AvatarImg = Instance.new("ImageLabel")
-            AvatarImg.Parent = Card
-            AvatarImg.BackgroundColor3 = Color3.fromRGB(35, 25, 50)
-            AvatarImg.Position = UDim2.new(0, 10, 0, 12)
-            AvatarImg.Size = UDim2.new(0, 50, 0, 50)
-            AvatarImg.Image = "rbxthumb://type=AvatarHeadShot&id=4437277181&w=150&h=150"
-
-            local CantosAvatar = Instance.new("UICorner")
-            CantosAvatar.CornerRadius = Instance.new("UICorner")
-            CantosAvatar.CornerRadius = UDim.new(1, 0)
-            CantosAvatar.Parent = AvatarImg
-
-            -- Textos do Pop-up
-            local NomeTxt = Instance.new("TextLabel")
-            NomeTxt.Parent = Card
-            NomeTxt.BackgroundTransparency = 1
-            NomeTxt.Position = UDim2.new(0, 70, 0, 10)
-            NomeTxt.Size = UDim2.new(0, 160, 0, 22)
-            NomeTxt.Font = Enum.Font.SourceSansBold
-            NomeTxt.Text = "Dave 👑"
-            NomeTxt.TextColor3 = Color3.fromRGB(220, 150, 255)
-            NomeTxt.TextSize = 15
-            NomeTxt.TextXAlignment = Enum.TextXAlignment.Left
-
-            local MsgTxt = Instance.new("TextLabel")
-            MsgTxt.Parent = Card
-            MsgTxt.BackgroundTransparency = 1
-            MsgTxt.Position = UDim2.new(0, 70, 0, 32)
-            MsgTxt.Size = UDim2.new(0, 160, 0, 30)
-            MsgTxt.Font = Enum.Font.SourceSans
-            MsgTxt.Text = "Por favor, me siga 😭"
-            MsgTxt.TextColor3 = Color3.fromRGB(200, 200, 200)
-            MsgTxt.TextSize = 13
-            MsgTxt.TextXAlignment = Enum.TextXAlignment.Left
-
-            -- Animação de entrada (desliza para dentro)
-            local tweenEntrada = TweenService:Create(Card, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(1, -260, 0.82, 0)})
-            tweenEntrada:Play()
-
-            -- Fica visível por 5 segundos e depois sai da tela
-            task.wait(5)
-            local tweenSaida = TweenService:Create(Card, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 20, 0.82, 0)})
-            tweenSaida:Play()
-            tweenSaida.Completed:Wait()
-            PopupGui:Destroy()
-        end)
-    end)
-end
 
 -- JANELA PRINCIPAL
 local FramePrincipal = Instance.new("Frame")
@@ -164,7 +89,7 @@ local FrameConfig = Instance.new("Frame")
 FrameConfig.Parent = ScreenGui
 FrameConfig.BackgroundColor3 = Temas[1].SubFundo
 FrameConfig.Position = UDim2.new(0.32, 0, 0.20, 0)
-FrameConfig.Size = UDim2.new(0, 260, 0, 220)
+FrameConfig.Size = UDim2.new(0, 260, 0, 260)
 FrameConfig.Active = true
 FrameConfig.Draggable = true
 FrameConfig.Visible = false
@@ -242,11 +167,17 @@ BotaoTamanhoMenu.Size = UDim2.new(0.9, 0, 0, 34)
 BotaoTamanhoMenu.LayoutOrder = 4
 BotaoTamanhoMenu.ZIndex = 55
 
+local BotaoToggleAutoInteract = Instance.new("TextButton")
+BotaoToggleAutoInteract.Parent = ContainerConfigScroll
+BotaoToggleAutoInteract.Size = UDim2.new(0.9, 0, 0, 34)
+BotaoToggleAutoInteract.LayoutOrder = 5
+BotaoToggleAutoInteract.ZIndex = 55
+
 local EspacoFimConfig = Instance.new("Frame")
 EspacoFimConfig.Parent = ContainerConfigScroll
 EspacoFimConfig.Size = UDim2.new(1, 0, 0, 10)
 EspacoFimConfig.BackgroundTransparency = 1
-EspacoFimConfig.LayoutOrder = 5
+EspacoFimConfig.LayoutOrder = 6
 
 -- PAINEL FLUTUANTE EXTERNO (FORA DO MENU)
 local FrameExternalTP = Instance.new("Frame")
@@ -530,12 +461,14 @@ estilizarBotao(ExtTP3, "🚀 TP3", Color3.fromRGB(120, 45, 120))
 estilizarBotao(ExtP4, "📍 P4", Color3.fromRGB(50, 30, 90))
 estilizarBotao(ExtTP4, "🚀 TP4", Color3.fromRGB(120, 45, 120))
 
+-- ESTILIZAÇÃO DOS BOTÕES DA ABA CONFIGURAÇÕES
 estilizarBotao(BotaoToggleExternalTP, "📌 Botões TP na Tela: Oculto", Color3.fromRGB(70, 20, 50))
 estilizarBotao(BotaoSalvarTodosWPs, "💾 Salvar Configurações & WPs", Color3.fromRGB(50, 30, 90))
 estilizarBotao(BotaoToggleAutoTP, "🚀 Auto TP (WP1 ao Entrar): OFF", Color3.fromRGB(70, 20, 50))
 estilizarBotao(BotaoTamanhoMenu, "📐 Tamanho do Menu: Médio", Color3.fromRGB(50, 30, 90))
+estilizarBotao(BotaoToggleAutoInteract, "⚡ Auto-Interact (Instantâneo): OFF", Color3.fromRGB(70, 20, 50))
 
--- BOTÃO DE CONFIGURAÇÕES
+-- BOTÃO DE CONFIGURAÇÕES NO MENU PRINCIPAL
 local BotaoConfig = Instance.new("TextButton")
 BotaoConfig.Parent = FramePrincipal
 BotaoConfig.Size = UDim2.new(0, 32, 0, 32)
@@ -578,12 +511,27 @@ local function atualizarModoExternalTP()
     end
 end
 
--- SISTEMA UNIFICADO DE SALVAR TUDO (WAYPOINTS + CONFIGURAÇÕES DE TELA E MENU)
+-- LÓGICA DO INSTANT INTERACT (AURA / PROXIMITY PROMPT)
+local function aplicarInstantInteract(prompt)
+    if prompt:IsA("ProximityPrompt") then
+        prompt.HoldDuration = 0
+        prompt.RequiresLineOfSight = false
+    end
+end
+
+workspace.DescendantAdded:Connect(function(item)
+    if autoInteractAtivo and item:IsA("ProximityPrompt") then
+        aplicarInstantInteract(item)
+    end
+end)
+
+-- SISTEMA UNIFICADO DE SALVAR TUDO (WAYPOINTS + CONFIGURAÇÕES + AUTO INTERACT)
 local function salvarTodosOsWaypoints()
     pcall(function()
         if writefile then
             local dados = {
                 AutoTP = autoTPPosAtivo,
+                AutoInteract = autoInteractAtivo,
                 ExtTPCount = quantidadeExternalTP,
                 MenuSizeIndex = tamanhoMenuIndex,
                 P1 = pontoSalvo1 and {X = pontoSalvo1.Position.X, Y = pontoSalvo1.Position.Y, Z = pontoSalvo1.Position.Z} or nil,
@@ -595,6 +543,23 @@ local function salvarTodosOsWaypoints()
         end
     end)
 end
+
+BotaoToggleAutoInteract.MouseButton1Click:Connect(function()
+    autoInteractAtivo = not autoInteractAtivo
+    if autoInteractAtivo then
+        BotaoToggleAutoInteract.Text = "⚡ Auto-Interact (Instantâneo): ON"
+        BotaoToggleAutoInteract.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        for _, obj in pairs(workspace:GetDescendants()) do
+            if obj:IsA("ProximityPrompt") then
+                aplicarInstantInteract(obj)
+            end
+        end
+    else
+        BotaoToggleAutoInteract.Text = "⚡ Auto-Interact (Instantâneo): OFF"
+        BotaoToggleAutoInteract.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+    end
+    salvarTodosOsWaypoints()
+end)
 
 -- CONTROLE DAS JANELAS
 BotaoFechar.MouseButton1Click:Connect(function()
@@ -625,7 +590,6 @@ BotaoFecharTP.MouseButton1Click:Connect(function()
     FrameTPPlayers.Visible = false
 end)
 
--- LOGICA DO TAMANHO DO MENU COM SALVAMENTO
 BotaoTamanhoMenu.MouseButton1Click:Connect(function()
     tamanhoMenuIndex = (tamanhoMenuIndex % #tamanhosMenu) + 1
     FramePrincipal.Size = tamanhosMenu[tamanhoMenuIndex]
@@ -640,7 +604,6 @@ BotaoToggleExternalTP.MouseButton1Click:Connect(function()
     salvarTodosOsWaypoints()
 end)
 
--- SISTEMA DE AÇÕES E LÓGICAS SEGURAS
 local espAtivo, noclipAtivo, flyAtivo, infJumpAtivo, loopTPAtivo = false, false, false, false, false
 local bodyVelocity, bodyGyro = nil, nil
 
@@ -669,7 +632,6 @@ local function executarTeleporte(cframeAlvo)
     end
 end
 
--- VINCULAÇÃO DOS WAYPOINTS (P1, P2, P3, P4)
 local function salvarPonto1() local root = obterComponentes() if root then pontoSalvo1 = root.CFrame salvarTodosOsWaypoints() end end
 local function tpPonto1() if pontoSalvo1 then executarTeleporte(pontoSalvo1) end end
 local function salvarPonto2() local root = obterComponentes() if root then pontoSalvo2 = root.CFrame salvarTodosOsWaypoints() end end
@@ -679,7 +641,6 @@ local function tpPonto3() if pontoSalvo3 then executarTeleporte(pontoSalvo3) end
 local function salvarPonto4() local root = obterComponentes() if root then pontoSalvo4 = root.CFrame salvarTodosOsWaypoints() end end
 local function tpPonto4() if pontoSalvo4 then executarTeleporte(pontoSalvo4) end end
 
--- BOTAO CONFIG: SALVAR
 BotaoSalvarTodosWPs.MouseButton1Click:Connect(function()
     salvarTodosOsWaypoints()
     BotaoSalvarTodosWPs.Text = "✅ Configurações Salvas!"
@@ -694,12 +655,12 @@ BotaoToggleAutoTP.MouseButton1Click:Connect(function()
     salvarTodosOsWaypoints()
 end)
 
--- CARREGAR TUDO DO ARQUIVO LOCAL AO ENTRAR (WAYPOINTS + CONFIGURAÇÕES)
+-- CARREGAR TUDO CORRETAMENTE COM JSONDecode
 task.spawn(function()
     pcall(function()
         if isfile and isfile(ARQUIVO_SAVE_ALL) then
             local conteudo = readfile(ARQUIVO_SAVE_ALL)
-            local dados = HttpService:JSONDecode(conteudo)
+            local dados = HttpService:JSONDecode(conteudo) -- CORRIGIDO PARA JSONDecode!
             if dados then
                 if dados.P1 then pontoSalvo1 = CFrame.new(dados.P1.X, dados.P1.Y, dados.P1.Z) end
                 if dados.P2 then pontoSalvo2 = CFrame.new(dados.P2.X, dados.P2.Y, dados.P2.Z) end
@@ -710,6 +671,20 @@ task.spawn(function()
                     autoTPPosAtivo = dados.AutoTP
                     BotaoToggleAutoTP.Text = autoTPPosAtivo and "🚀 Auto TP (WP1 ao Entrar): ON" or "🚀 Auto TP (WP1 ao Entrar): OFF"
                     BotaoToggleAutoTP.BackgroundColor3 = autoTPPosAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
+                end
+
+                if dados.AutoInteract ~= nil then
+                    autoInteractAtivo = dados.AutoInteract
+                    BotaoToggleAutoInteract.Text = autoInteractAtivo and "⚡ Auto-Interact (Instantâneo): ON" or "⚡ Auto-Interact (Instantâneo): OFF"
+                    BotaoToggleAutoInteract.BackgroundColor3 = autoInteractAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
+                    
+                    if autoInteractAtivo then
+                        for _, obj in pairs(workspace:GetDescendants()) do
+                            if obj:IsA("ProximityPrompt") then
+                                aplicarInstantInteract(obj)
+                            end
+                        end
+                    end
                 end
 
                 if dados.ExtTPCount ~= nil then
@@ -738,9 +713,6 @@ task.spawn(function()
             end
         end
     end)
-    
-    -- Dispara o pop-up com a sua foto de perfil logo após carregar
-    mostrarPopupPerfil()
 end)
 
 BotaoModoTP.MouseButton1Click:Connect(function()
@@ -977,29 +949,37 @@ ExtTP3.MouseButton1Click:Connect(tpPonto3)
 ExtP4.MouseButton1Click:Connect(salvarPonto4)
 ExtTP4.MouseButton1Click:Connect(tpPonto4)
 
--- UTILITIES (SERVER HOP, RESET, DISCORD)
+-- UTILITIES (SERVER HOP CORRIGIDO E ROBUSTO)
 local isHopando = false
 BotaoServerPoucaGente.MouseButton1Click:Connect(function()
     if isHopando then return end
     isHopando = true
     BotaoServerPoucaGente.Text = "🌐 Searching Server..."
+    
     local placeId = game.PlaceId
-    local url = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"
-    local sucesso, resultado = pcall(function()
-        return HttpService:JSONDecode(game:HttpGet(url))
-    end)
-    local serverEncontrado = nil
-    if sucesso and resultado and resultado.data then
-        for _, server in ipairs(resultado.data) do
-            if server.playing and server.playing < server.maxPlayers and server.id ~= game.JobId then
-                serverEncontrado = server.id
-                break
+    local servers = {}
+    local cursor = ""
+    
+    local sucesso = pcall(function()
+        repeat
+            local url = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"
+            if cursor ~= "" then
+                url = url .. "&cursor=" .. cursor
             end
-        end
-    end
-    if serverEncontrado then
+            local response = HttpService:JSONDecode(game:HttpGet(url))
+            cursor = response.nextPageCursor
+            for _, server in ipairs(response.data) do
+                if server.playing and server.playing < server.maxPlayers and server.id ~= game.JobId then
+                    table.insert(servers, server.id)
+                end
+            end
+        until #servers > 0 or not cursor or cursor == ""
+    end)
+    
+    if sucesso and #servers > 0 then
         BotaoServerPoucaGente.Text = "🌐 Connecting..."
-        TeleportService:TeleportToPlaceInstance(placeId, serverEncontrado, LocalPlayer)
+        local serverAleatorio = servers[math.random(1, #servers)]
+        TeleportService:TeleportToPlaceInstance(placeId, serverAleatorio, LocalPlayer)
     else
         BotaoServerPoucaGente.Text = "⚠️ No Server Found!"
         task.wait(2)
