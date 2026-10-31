@@ -7,8 +7,6 @@ local TeamsService = game:GetService("Teams")
 local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local TweenService = game:GetService("TweenService")
-local ContentProvider = game:GetService("ContentProvider")
-local Camera = workspace.CurrentCamera
 
 -- PROTEÇÃO ANTI-DUPLICAÇÃO E LIMPEZA DE CONEXÕES
 if PlayerGui:FindFirstChild("RavenModFull") then
@@ -20,10 +18,14 @@ end
 
 if _G.RavenConnections then
     for _, conexao in pairs(_G.RavenConnections) do
-        if conexao then conexao:Disconnect() end
+        if typeof(conexao) == "table" then
+            for _, c in pairs(conexao) do if c then c:Disconnect() end end
+        elseif conexao then
+            conexao:Disconnect()
+        end
     end
 end
-_G.RavenConnections = {}
+_G.RavenConnections = { ESP = {} }
 
 -- CONFIGURAÇÕES GLOBAIS DE TELEPORTE, ESTILO E AUTO-INTERACT
 local ModoTP = "Instantâneo"
@@ -491,6 +493,7 @@ estilizarBotao(BotaoLoopTP, "🔄 Loop TP: OFF", Color3.fromRGB(70, 20, 50))
 estilizarBotao(BotaoAtualizarLista, "🔄 Refresh Players", Color3.fromRGB(50, 30, 90))
 
 local function atualizarModoExternalTP()
+    quantidadeExternalTP = math.clamp(quantidadeExternalTP, 0, 4)
     if quantidadeExternalTP == 0 then
         FrameExternalTP.Visible = false
         BotaoToggleExternalTP.Text = "📌 Botões TP na Tela: Oculto"
@@ -511,7 +514,7 @@ local function atualizarModoExternalTP()
     end
 end
 
--- LÓGICA DO INSTANT INTERACT (AURA / PROXIMITY PROMPT)
+-- LÓGICA DO INSTANT INTERACT (PROXIMITY PROMPT) COM GERENCIAMENTO
 local function aplicarInstantInteract(prompt)
     if prompt:IsA("ProximityPrompt") then
         prompt.HoldDuration = 0
@@ -519,13 +522,29 @@ local function aplicarInstantInteract(prompt)
     end
 end
 
-workspace.DescendantAdded:Connect(function(item)
-    if autoInteractAtivo and item:IsA("ProximityPrompt") then
-        aplicarInstantInteract(item)
+local function gerenciarAutoInteract(ativo)
+    if _G.RavenConnections["AutoInteract"] then
+        _G.RavenConnections["AutoInteract"]:Disconnect()
+        _G.RavenConnections["AutoInteract"] = nil
     end
-end)
+    if ativo then
+        _G.RavenConnections["AutoInteract"] = workspace.DescendantAdded:Connect(function(item)
+            if autoInteractAtivo and item:IsA("ProximityPrompt") then
+                aplicarInstantInteract(item)
+            end
+        end)
+    end
+end
 
--- SISTEMA UNIFICADO DE SALVAR TUDO (WAYPOINTS + CONFIGURAÇÕES + AUTO INTERACT)
+-- VALIDAÇÃO INDIVIDUAL DE COORDENADAS DO WAYPOINT (CORREÇÃO TÉCNICA)
+local function validarCFrameSalvo(dadosWP)
+    if dadosWP and type(dadosWP.X) == "number" and type(dadosWP.Y) == "number" and type(dadosWP.Z) == "number" then
+        return CFrame.new(dadosWP.X, dadosWP.Y, dadosWP.Z)
+    end
+    return nil
+end
+
+-- SISTEMA UNIFICADO DE SALVAR TUDO (WAYPOINTS + CONFIGURAÇÕES)
 local function salvarTodosOsWaypoints()
     pcall(function()
         if writefile then
@@ -549,6 +568,7 @@ BotaoToggleAutoInteract.MouseButton1Click:Connect(function()
     if autoInteractAtivo then
         BotaoToggleAutoInteract.Text = "⚡ Auto-Interact (Instantâneo): ON"
         BotaoToggleAutoInteract.BackgroundColor3 = Color3.fromRGB(130, 40, 180)
+        gerenciarAutoInteract(true)
         for _, obj in pairs(workspace:GetDescendants()) do
             if obj:IsA("ProximityPrompt") then
                 aplicarInstantInteract(obj)
@@ -557,6 +577,7 @@ BotaoToggleAutoInteract.MouseButton1Click:Connect(function()
     else
         BotaoToggleAutoInteract.Text = "⚡ Auto-Interact (Instantâneo): OFF"
         BotaoToggleAutoInteract.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+        gerenciarAutoInteract(false)
     end
     salvarTodosOsWaypoints()
 end)
@@ -592,9 +613,10 @@ end)
 
 BotaoTamanhoMenu.MouseButton1Click:Connect(function()
     tamanhoMenuIndex = (tamanhoMenuIndex % #tamanhosMenu) + 1
+    tamanhoMenuIndex = math.clamp(tamanhoMenuIndex, 1, #tamanhosMenu)
     FramePrincipal.Size = tamanhosMenu[tamanhoMenuIndex]
     local rotulosMenu = {"Pequeno", "Médio", "Grande"}
-    BotaoTamanhoMenu.Text = "📐 Tamanho do Menu: " .. rotulosMenu[tamanhoMenuIndex]
+    BotaoTamanhoMenu.Text = "📐 Tamanho do Menu: " .. (rotulosMenu[tamanhoMenuIndex] or "Médio")
     salvarTodosOsWaypoints()
 end)
 
@@ -606,6 +628,7 @@ end)
 
 local espAtivo, noclipAtivo, flyAtivo, infJumpAtivo, loopTPAtivo = false, false, false, false, false
 local bodyVelocity, bodyGyro = nil, nil
+local originalCollisions = {}
 
 local function obterComponentes()
     local char = LocalPlayer.Character
@@ -623,7 +646,7 @@ local function executarTeleporte(cframeAlvo)
             rootPart.CFrame = cframeAlvo
         end
     elseif ModoTP == "Tween" then
-        local velTween = tonumber(CaixaTweenSpeed.Text) or 150
+        local velTween = math.max(1, tonumber(CaixaTweenSpeed.Text) or 150)
         local distancia = (rootPart.Position - cframeAlvo.Position).Magnitude
         local tempo = distancia / velTween
         local tweenInfo = TweenInfo.new(tempo, Enum.EasingStyle.Linear)
@@ -655,17 +678,17 @@ BotaoToggleAutoTP.MouseButton1Click:Connect(function()
     salvarTodosOsWaypoints()
 end)
 
--- CARREGAR TUDO CORRETAMENTE COM JSONDecode
+-- CARREGAR TUDO COM VALIDAÇÃO SEGURA DE JSON E COORDENADAS
 task.spawn(function()
     pcall(function()
         if isfile and isfile(ARQUIVO_SAVE_ALL) then
             local conteudo = readfile(ARQUIVO_SAVE_ALL)
-            local dados = HttpService:JSONDecode(conteudo) -- CORRIGIDO PARA JSONDecode!
-            if dados then
-                if dados.P1 then pontoSalvo1 = CFrame.new(dados.P1.X, dados.P1.Y, dados.P1.Z) end
-                if dados.P2 then pontoSalvo2 = CFrame.new(dados.P2.X, dados.P2.Y, dados.P2.Z) end
-                if dados.P3 then pontoSalvo3 = CFrame.new(dados.P3.X, dados.P3.Y, dados.P3.Z) end
-                if dados.P4 then pontoSalvo4 = CFrame.new(dados.P4.X, dados.P4.Y, dados.P4.Z) end
+            local dados = HttpService:JSONDecode(conteudo)
+            if dados and type(dados) == "table" then
+                if dados.P1 then pontoSalvo1 = validarCFrameSalvo(dados.P1) end
+                if dados.P2 then pontoSalvo2 = validarCFrameSalvo(dados.P2) end
+                if dados.P3 then pontoSalvo3 = validarCFrameSalvo(dados.P3) end
+                if dados.P4 then pontoSalvo4 = validarCFrameSalvo(dados.P4) end
                 
                 if dados.AutoTP ~= nil then
                     autoTPPosAtivo = dados.AutoTP
@@ -679,6 +702,7 @@ task.spawn(function()
                     BotaoToggleAutoInteract.BackgroundColor3 = autoInteractAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
                     
                     if autoInteractAtivo then
+                        gerenciarAutoInteract(true)
                         for _, obj in pairs(workspace:GetDescendants()) do
                             if obj:IsA("ProximityPrompt") then
                                 aplicarInstantInteract(obj)
@@ -688,15 +712,15 @@ task.spawn(function()
                 end
 
                 if dados.ExtTPCount ~= nil then
-                    quantidadeExternalTP = dados.ExtTPCount
+                    quantidadeExternalTP = math.clamp(tonumber(dados.ExtTPCount) or 0, 0, 4)
                     atualizarModoExternalTP()
                 end
 
                 if dados.MenuSizeIndex ~= nil then
-                    tamanhoMenuIndex = dados.MenuSizeIndex
+                    tamanhoMenuIndex = math.clamp(tonumber(dados.MenuSizeIndex) or 2, 1, #tamanhosMenu)
                     FramePrincipal.Size = tamanhosMenu[tamanhoMenuIndex]
                     local rotulosMenu = {"Pequeno", "Médio", "Grande"}
-                    BotaoTamanhoMenu.Text = "📐 Tamanho do Menu: " .. rotulosMenu[tamanhoMenuIndex]
+                    BotaoTamanhoMenu.Text = "📐 Tamanho do Menu: " .. (rotulosMenu[tamanhoMenuIndex] or "Médio")
                 end
                 
                 if autoTPPosAtivo and pontoSalvo1 then
@@ -815,7 +839,10 @@ BotaoLoopTP.MouseButton1Click:Connect(function()
             end
         end)
     else
-        if _G.RavenConnections["LoopTP"] then _G.RavenConnections["LoopTP"]:Disconnect() end
+        if _G.RavenConnections["LoopTP"] then
+            _G.RavenConnections["LoopTP"]:Disconnect()
+            _G.RavenConnections["LoopTP"] = nil
+        end
     end
 end)
 
@@ -845,7 +872,10 @@ BotaoInfJump.MouseButton1Click:Connect(function()
             if hum then hum:ChangeState(Enum.HumanoidStateType.Jumping) end
         end)
     else
-        if _G.RavenConnections["InfJump"] then _G.RavenConnections["InfJump"]:Disconnect() end
+        if _G.RavenConnections["InfJump"] then
+            _G.RavenConnections["InfJump"]:Disconnect()
+            _G.RavenConnections["InfJump"] = nil
+        end
     end
 end)
 
@@ -859,12 +889,27 @@ BotaoNoclip.MouseButton1Click:Connect(function()
             local _, _, char = obterComponentes()
             if char then
                 for _, p in ipairs(char:GetDescendants()) do
-                    if p:IsA("BasePart") then p.CanCollide = false end
+                    if p:IsA("BasePart") then
+                        if originalCollisions[p] == nil then
+                            originalCollisions[p] = p.CanCollide
+                        end
+                        p.CanCollide = false
+                    end
                 end
             end
         end)
     else
-        if _G.RavenConnections["Noclip"] then _G.RavenConnections["Noclip"]:Disconnect() end
+        if _G.RavenConnections["Noclip"] then
+            _G.RavenConnections["Noclip"]:Disconnect()
+            _G.RavenConnections["Noclip"] = nil
+        end
+        -- Restaura exatamente o estado original de cada peça
+        for p, state in pairs(originalCollisions) do
+            if p and p.Parent then
+                p.CanCollide = state
+            end
+        end
+        originalCollisions = {}
     end
 end)
 
@@ -884,10 +929,26 @@ BotaoFly.MouseButton1Click:Connect(function()
             _G.RavenConnections["Fly"] = RunService.RenderStepped:Connect(function()
                 if not flyAtivo then return end
                 local curRoot, curHum = obterComponentes()
-                if curRoot and curHum then
+                local cam = workspace.CurrentCamera
+                if curRoot and curHum and cam then
                     local vel = tonumber(CaixaFly.Text) or 50
-                    bodyGyro.CFrame = Camera.CFrame
-                    bodyVelocity.Velocity = (curHum.MoveDirection.Magnitude > 0) and (Camera.CFrame.LookVector * vel) or Vector3.zero
+                    bodyGyro.CFrame = cam.CFrame
+                    bodyVelocity.Velocity = (curHum.MoveDirection.Magnitude > 0) and (cam.CFrame.LookVector * vel) or Vector3.zero
+                end
+            end)
+            
+            -- Reseta o fly automaticamente se o player morrer
+            _G.RavenConnections["FlyRespawn"] = LocalPlayer.CharacterAdded:Connect(function()
+                if flyAtivo then
+                    flyAtivo = false
+                    BotaoFly.Text = "Fly: OFF"
+                    BotaoFly.BackgroundColor3 = Color3.fromRGB(70, 20, 50)
+                    if bodyVelocity then bodyVelocity:Destroy() end
+                    if bodyGyro then bodyGyro:Destroy() end
+                    if _G.RavenConnections["Fly"] then
+                        _G.RavenConnections["Fly"]:Disconnect()
+                        _G.RavenConnections["Fly"] = nil
+                    end
                 end
             end)
         end
@@ -895,11 +956,14 @@ BotaoFly.MouseButton1Click:Connect(function()
         if hum then hum.PlatformStand = false end
         if bodyVelocity then bodyVelocity:Destroy() end
         if bodyGyro then bodyGyro:Destroy() end
-        if _G.RavenConnections["Fly"] then _G.RavenConnections["Fly"]:Disconnect() end
+        if _G.RavenConnections["Fly"] then
+            _G.RavenConnections["Fly"]:Disconnect()
+            _G.RavenConnections["Fly"] = nil
+        end
     end
 end)
 
--- VISUALS (ESP)
+-- VISUALS (ESP) COM SUPORTE A NOVOS JOGADORES
 local function aplicarESP(p)
     if p == LocalPlayer then return end
     local function addHL(char)
@@ -912,12 +976,14 @@ local function aplicarESP(p)
         hl.Parent = char
     end
     if p.Character then addHL(p.Character) end
-    p.CharacterAdded:Connect(function(char)
+    
+    local conn = p.CharacterAdded:Connect(function(char)
         if espAtivo then
             task.wait(0.5)
             addHL(char)
         end
     end)
+    table.insert(_G.RavenConnections.ESP, conn)
 end
 
 BotaoESP.MouseButton1Click:Connect(function()
@@ -926,7 +992,21 @@ BotaoESP.MouseButton1Click:Connect(function()
     BotaoESP.BackgroundColor3 = espAtivo and Color3.fromRGB(130, 40, 180) or Color3.fromRGB(70, 20, 50)
     if espAtivo then
         for _, p in ipairs(Players:GetPlayers()) do aplicarESP(p) end
+        -- Trata novos jogadores que entram no servidor depois de ativado
+        _G.RavenConnections["ESP_PlayerAdded"] = Players.PlayerAdded:Connect(function(p)
+            if espAtivo then
+                aplicarESP(p)
+            end
+        end)
     else
+        for _, conn in ipairs(_G.RavenConnections.ESP) do
+            if conn then conn:Disconnect() end
+        end
+        _G.RavenConnections.ESP = {}
+        if _G.RavenConnections["ESP_PlayerAdded"] then
+            _G.RavenConnections["ESP_PlayerAdded"]:Disconnect()
+            _G.RavenConnections["ESP_PlayerAdded"] = nil
+        end
         for _, p in ipairs(Players:GetPlayers()) do
             if p.Character and p.Character:FindFirstChild("SpyHighlight") then
                 p.Character.SpyHighlight:Destroy()
@@ -949,7 +1029,7 @@ ExtTP3.MouseButton1Click:Connect(tpPonto3)
 ExtP4.MouseButton1Click:Connect(salvarPonto4)
 ExtTP4.MouseButton1Click:Connect(tpPonto4)
 
--- UTILITIES (SERVER HOP CORRIGIDO E ROBUSTO)
+-- UTILITIES (SERVER HOP BLINDADO CONTRA TRAVAMENTO)
 local isHopando = false
 BotaoServerPoucaGente.MouseButton1Click:Connect(function()
     if isHopando then return end
@@ -976,6 +1056,9 @@ BotaoServerPoucaGente.MouseButton1Click:Connect(function()
         until #servers > 0 or not cursor or cursor == ""
     end)
     
+    -- Garante que o estado de hop é liberado independentemente de erro ou sucesso na busca
+    isHopando = false
+    
     if sucesso and #servers > 0 then
         BotaoServerPoucaGente.Text = "🌐 Connecting..."
         local serverAleatorio = servers[math.random(1, #servers)]
@@ -984,7 +1067,6 @@ BotaoServerPoucaGente.MouseButton1Click:Connect(function()
         BotaoServerPoucaGente.Text = "⚠️ No Server Found!"
         task.wait(2)
         BotaoServerPoucaGente.Text = "🌐 Server Hop (Low Players)"
-        isHopando = false
     end
 end)
 
